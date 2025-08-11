@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/core/widgets/textfield.dart';
 import 'package:lalgedi/features/auth/presentation/login_page.dart';
+import 'package:lalgedi/features/auth/presentation/otpscreen.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -68,7 +69,7 @@ class _SignupState extends State<Signup> {
                         ),
                       ),
                       const Text(
-                        "गेंडी",
+                        "गेडी",
                         style: TextStyle(
                           fontSize: 50,
                           fontWeight: FontWeight.bold,
@@ -175,7 +176,16 @@ class _SignupState extends State<Signup> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: agreeToTerms ? () {} : null,
+                      onPressed: agreeToTerms
+                          ? () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return const OtpScreen();
+                                }),
+                              );
+                            }
+                          : null,
                       child: const Text(
                         "SignUp",
                         style: TextStyle(

@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
                 Text(
-                  "गेंडी",
+                  "गेडी",
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
