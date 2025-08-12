@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/features/home/presentation/page/homepage.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -323,8 +324,11 @@ class LocationStepWidget extends StatelessWidget {
           child: ElevatedButton(
             onPressed: selectedDistrict != null
                 ? () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Setup Finished!")),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) {
+                        return const HomeScreen();
+                      }),
                     );
                   }
                 : null,

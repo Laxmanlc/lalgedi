@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/core/widgets/textfield.dart';
 import 'package:lalgedi/features/auth/presentation/signuppage.dart';
+import 'package:lalgedi/features/home/presentation/page/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -161,7 +162,12 @@ class _SignupState extends State<LoginPage> {
                       ),
                       onPressed: agreeToTerms
                           ? () {
-                              // Sign up logic here
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return const HomeScreen();
+                                }),
+                              );
                             }
                           : null,
                       child: const Text(
