@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/data/model/homepagemodel.dart';
+import 'package:lalgedi/features/home/presentation/widgets/livebuttonontap.dart';
 
-class HomeTopRow extends StatelessWidget {
+class HomeTopRow extends StatefulWidget {
   const HomeTopRow({
     super.key,
     required Animation<double> animation,
   }) : _animation = animation;
 
   final Animation<double> _animation;
+  @override
+  State<HomeTopRow> createState() => _HomeTopRowState();
+}
 
+class _HomeTopRowState extends State<HomeTopRow> {
+  final GlobalKey _liveBtnKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -39,36 +45,40 @@ class HomeTopRow extends StatelessWidget {
         Row(
           children: [
             // LIVE badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: AppColors.primarycolor,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  FadeTransition(
-                    opacity: _animation,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+            GestureDetector(
+              key: _liveBtnKey,
+              onTap: () => showLivePricePopup(context, _liveBtnKey),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primarycolor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FadeTransition(
+                      opacity: widget._animation,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    'LIVE',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                    const SizedBox(width: 4),
+                    const Text(
+                      'LIVE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(width: 12),

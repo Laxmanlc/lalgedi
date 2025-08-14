@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
@@ -37,59 +38,61 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       backgroundColor: AppColors.backgroundcolor,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              HomeTopRow(animation: _animation),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    // The universal rate card
-                    RateCard(
-                      gold: RateItem(
-                        label: 'Gold Rate',
-                        labelColor: AppColors.primarycolor,
-                        price: 'Rs 1,95,000',
-                        unit: 'Per Tola',
-                        badgeLabel: '24k',
-                        purity: '24k 99.99%',
-                        image: Image.asset(
-                          "assets/image/gold.png",
-                          height: 50,
-                          width: 50,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                HomeTopRow(animation: _animation),
+                const SizedBox(height: 30),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      // The universal rate card
+                      RateCard(
+                        gold: RateItem(
+                          label: 'Gold Rate',
+                          labelColor: AppColors.primarycolor,
+                          price: 'Rs 1,95,000',
+                          unit: 'Per Tola',
+                          badgeLabel: '24k',
+                          purity: '24k 99.99%',
+                          image: Image.asset(
+                            "assets/image/gold.png",
+                            height: 50,
+                            width: 50,
+                          ),
                         ),
-                      ),
-                      silver: RateItem(
-                        label: 'Silver Rate',
-                        labelColor: AppColors.silvercolor,
-                        price: 'Rs 19,000',
-                        unit: 'Per Tola',
-                        purity: '99.99%',
-                        image: Image.asset(
-                          "assets/image/silver.png",
-                          height: 60,
-                          width: 60,
+                        silver: RateItem(
+                          label: 'Silver Rate',
+                          labelColor: AppColors.silvercolor,
+                          price: 'Rs 19,000',
+                          unit: 'Per Tola',
+                          purity: '99.99%',
+                          image: Image.asset(
+                            "assets/image/silver.png",
+                            height: 60,
+                            width: 60,
+                          ),
                         ),
+                        lastUpdated: 'last update 1hrs ago',
+                        onShare: () {
+                          // handle share
+                          debugPrint('share tapped');
+                        },
+                        onTapBadge: () {
+                          debugPrint('badge tapped');
+                        },
                       ),
-                      lastUpdated: 'last update 1hrs ago',
-                      onShare: () {
-                        // handle share
-                        debugPrint('share tapped');
-                      },
-                      onTapBadge: () {
-                        debugPrint('badge tapped');
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const JewelryCalculatorWidget()
-            ],
+                const JewelryCalculatorWidget(),
+                const SizedBox(height: 20), // Extra bottom space
+              ],
+            ),
           ),
         ),
       ),
