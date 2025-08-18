@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/data/model/homepagemodel.dart';
-import 'package:lalgedi/features/home/presentation/widgets/gold_calculator.dart';
+import 'package:lalgedi/features/home/presentation/page/gold_calculator.dart';
 import 'package:lalgedi/features/home/presentation/widgets/homewidget.dart';
 
 class HomeScreen extends StatefulWidget {

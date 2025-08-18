@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lalgedi/features/home/presentation/page/goldloan_calculator.dart';
+import 'package:lalgedi/features/account/presentation/pages/accountpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const GoldLoanCalculatorPage(),
+      home: const AccountScreen(),
     );
   }
 }
