@@ -103,7 +103,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   const Positioned(
                     bottom: -5,
                     child: CircleAvatar(
-                      radius: 14,
+                      radius: 12,
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.verified,
