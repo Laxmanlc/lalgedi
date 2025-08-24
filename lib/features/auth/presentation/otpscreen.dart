@@ -95,15 +95,17 @@ class _OtpScreenState extends State<OtpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundcolor,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Opacity(
-                opacity: 0.2,
-                child: Image.asset("assets/image/logo.png"),
+            ClipRect(
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Opacity(
+                  opacity: 0.2,
+                  child: Image.asset("assets/image/logo.png"),
+                ),
               ),
             ),
             Padding(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/core/widgets/textfield.dart';
 import 'package:lalgedi/features/auth/presentation/signuppage.dart';
-import 'package:lalgedi/features/home/presentation/page/homepage.dart';
+import 'package:lalgedi/features/navigationbar/navigationscreen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,17 +23,19 @@ class _SignupState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // allows form to move up on keyboard
+      resizeToAvoidBottomInset: false, // allows form to move up on keyboard
       backgroundColor: AppColors.backgroundcolor,
       body: Stack(
         children: [
           // Background fixed image
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Opacity(
-              opacity: 0.2,
-              child: Image.asset(
-                "assets/image/logo.png",
+          ClipRect(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Opacity(
+                opacity: 0.2,
+                child: Image.asset(
+                  "assets/image/logo.png",
+                ),
               ),
             ),
           ),
@@ -165,7 +167,7 @@ class _SignupState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) {
-                                  return const HomeScreen();
+                                  return const NavigationBarScreen();
                                 }),
                               );
                             }

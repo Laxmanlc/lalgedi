@@ -24,17 +24,19 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true, // allows form to move up on keyboard
+      resizeToAvoidBottomInset: false, // allows form to move up on keyboard
       backgroundColor: AppColors.backgroundcolor,
       body: Stack(
         children: [
           // Background fixed image
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Opacity(
-              opacity: 0.2,
-              child: Image.asset(
-                "assets/image/logo.png",
+          ClipRect(
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Opacity(
+                opacity: 0.2,
+                child: Image.asset(
+                  "assets/image/logo.png",
+                ),
               ),
             ),
           ),

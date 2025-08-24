@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -35,29 +36,61 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
 
   Future<void> _pickDate() async {
     final now = DateTime.now();
-    final picked = await showDatePicker(
+    DateTime tempPickedDate = _selectedDate ?? now;
+
+    await showCupertinoModalPopup(
       context: context,
-      firstDate: DateTime(now.year - 10),
-      lastDate: now,
-      initialDate: _selectedDate ?? now,
-      helpText: 'Select loan date',
-      builder: (ctx, child) {
-        return Theme(
-          data: Theme.of(ctx).copyWith(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.red.shade700,
-              primary: Colors.red.shade700,
+      builder: (ctx) => Container(
+        height: 250,
+        color: Colors.white,
+        child: Column(
+          children: [
+            // Done button row
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedDate = DateTime(
+                          tempPickedDate.year,
+                          tempPickedDate.month,
+                          tempPickedDate.day,
+                        );
+                        _dateCtrl.text =
+                            DateFormat('dd-MM-yyyy').format(_selectedDate!);
+                      });
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text(
+                      "Done",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          child: child!,
-        );
-      },
+
+            // The wheel date picker
+            Expanded(
+              child: CupertinoDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                maximumDate: now,
+                initialDateTime: _selectedDate ?? now,
+                onDateTimeChanged: (val) {
+                  tempPickedDate = val;
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
-    if (picked != null) {
-      _selectedDate = DateTime(picked.year, picked.month, picked.day);
-      _dateCtrl.text = DateFormat('dd-MM-yyyy').format(_selectedDate!);
-      setState(() {});
-    }
   }
 
   void _calculate() {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
-import 'package:lalgedi/features/home/presentation/page/homepage.dart';
+import 'package:lalgedi/features/navigationbar/navigationscreen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -105,43 +105,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.3,
-                                child: Flexible(
-                                  child: PageView(
-                                    controller: _pageController,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    onPageChanged: (index) {
-                                      setState(() => _currentPage = index);
-                                    },
-                                    children: [
-                                      SelectableStepWidget(
-                                        stepIndex: 0,
-                                        stepTitle: "Choose your language",
-                                        options: const ["English", "Nepali"],
-                                        selectedOption: _selectedOptions[0],
-                                        onOptionSelected: onOptionSelected,
-                                      ),
-                                      SelectableStepWidget(
-                                        stepIndex: 1,
-                                        stepTitle: "Choose Units System",
-                                        options: const ["Tola", "Gram"],
-                                        selectedOption: _selectedOptions[1],
-                                        onOptionSelected: onOptionSelected,
-                                      ),
-                                      SelectableStepWidget(
-                                        stepIndex: 2,
-                                        stepTitle: "Select Calendar",
-                                        options: const ["BS", "AD"],
-                                        selectedOption: _selectedOptions[2],
-                                        onOptionSelected: onOptionSelected,
-                                      ),
-                                      LocationStepWidget(
-                                        selectedDistrict: _selectedOptions[3],
-                                        onDistrictSelected: (value) =>
-                                            onOptionSelected(3, value),
-                                      ),
-                                    ],
-                                  ),
+                                child: PageView(
+                                  controller: _pageController,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  onPageChanged: (index) {
+                                    setState(() => _currentPage = index);
+                                  },
+                                  children: [
+                                    SelectableStepWidget(
+                                      stepIndex: 0,
+                                      stepTitle: "Choose your language",
+                                      options: const ["English", "Nepali"],
+                                      selectedOption: _selectedOptions[0],
+                                      onOptionSelected: onOptionSelected,
+                                    ),
+                                    SelectableStepWidget(
+                                      stepIndex: 1,
+                                      stepTitle: "Choose Units System",
+                                      options: const ["Tola", "Gram"],
+                                      selectedOption: _selectedOptions[1],
+                                      onOptionSelected: onOptionSelected,
+                                    ),
+                                    SelectableStepWidget(
+                                      stepIndex: 2,
+                                      stepTitle: "Select Calendar",
+                                      options: const ["BS", "AD"],
+                                      selectedOption: _selectedOptions[2],
+                                      onOptionSelected: onOptionSelected,
+                                    ),
+                                    LocationStepWidget(
+                                      selectedDistrict: _selectedOptions[3],
+                                      onDistrictSelected: (value) =>
+                                          onOptionSelected(3, value),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -327,7 +324,7 @@ class LocationStepWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) {
-                        return const HomeScreen();
+                        return const NavigationBarScreen();
                       }),
                     );
                   }

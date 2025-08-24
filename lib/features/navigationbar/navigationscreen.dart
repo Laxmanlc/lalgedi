@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/account/presentation/pages/accountpage.dart';
@@ -9,7 +11,6 @@ class NavigationBarScreen extends StatefulWidget {
   const NavigationBarScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _NavigationBarScreenState createState() => _NavigationBarScreenState();
 }
 
@@ -32,45 +33,69 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, // keyboard pushes only body
       body: _screens[_selectedIndex],
-      floatingActionButton: Container(
-        height: 65,
-        width: 65,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          border: Border.all(color: AppColors.primarycolor, width: 2),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, 3),
+
+      bottomNavigationBar: SizedBox(
+        height: 70, // extra height for half-circle effect
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Bottom Nav Bar
+            BottomAppBar(
+              shape: const CircularNotchedRectangle(),
+              notchMargin: 8,
+              child: SizedBox(
+                height: 70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem("assets/image/home.png", "Home", 0),
+                    _buildNavItem("assets/image/catalog.png", "Catalog", 1),
+                    const SizedBox(width: 70), // gap for QR button
+                    _buildNavItem("assets/image/lona.png", "Gold Loan", 2),
+                    _buildNavItem("assets/image/account.png", "Account", 3),
+                  ],
+                ),
+              ),
+            ),
+
+            // 👇 Positioned QR Button (half inside/outside)
+            Positioned(
+              top: -25, // moves it up so it's half inside the bar
+              left: 0,
+              right: 0,
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    height: 70,
+                    width: 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                      border: Border.all(
+                        color: AppColors.primarycolor,
+                        width: 2,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.qr_code_scanner,
+                      size: 35,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
-        ),
-        child: const Icon(
-          Icons.qr_code_scanner, // you can replace with Image.asset()
-          size: 35,
-          color: Colors.black,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: SizedBox(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // Home
-              _buildNavItem("assets/image/home.png", "Home", 0),
-              _buildNavItem("assets/image/catalog.png", "Catalog", 1),
-              const SizedBox(width: 50), // Space for center button
-              _buildNavItem("assets/image/lona.png", "Gold Loan", 2),
-              _buildNavItem("assets/image/account.png", "Account", 3),
-            ],
-          ),
         ),
       ),
     );
@@ -87,12 +112,12 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
             assetPath,
             height: 25,
             width: 25,
-            color: isSelected ? Colors.red : Colors.black, // Change color here
+            color: isSelected ? AppColors.primarycolor : Colors.black,
           ),
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.red : Colors.black,
+              color: isSelected ? AppColors.primarycolor : Colors.black,
               fontSize: 12,
             ),
           ),
