@@ -14,7 +14,7 @@ void showLivePricePopup(BuildContext context, GlobalKey targetKey) {
       padding: const EdgeInsets.all(8.0),
       child: Stack(
         children: [
-          // Blurred background
+          // Blurred background (tap to close)
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
@@ -24,23 +24,17 @@ void showLivePricePopup(BuildContext context, GlobalKey targetKey) {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                 child: Container(
-                  color: const Color.fromARGB(218, 0, 0, 0)
-                      .withOpacity(0.2), // dim effect
+                  color: Colors.black.withOpacity(0.2),
                 ),
               ),
             ),
           ),
 
-          // Popup card
+          // Popup card (NO Obx here)
           Positioned(
-            left: position.dx + size.width / 2 - 300, // center card
+            left: position.dx + size.width / 2 - 300,
             top: position.dy + size.height + 8,
-            child: const LivePriceCard(
-              goldPrice: "195000",
-              silverPrice: "19500",
-              goldChange: "200",
-              silverChange: "50",
-            ),
+            child: LivePriceCard(), // <- clean widget
           ),
         ],
       ),

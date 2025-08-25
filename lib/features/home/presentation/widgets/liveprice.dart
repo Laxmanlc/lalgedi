@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:lalgedi/features/home/presentation/bloc/home_controller.dart';
 
 class LivePriceCard extends StatelessWidget {
-  final String goldPrice;
-  final String silverPrice;
-  final String goldChange;
-  final String silverChange;
+  LivePriceCard({super.key});
 
-  const LivePriceCard({
-    super.key,
-    required this.goldPrice,
-    required this.silverPrice,
-    required this.goldChange,
-    required this.silverChange,
-  });
+  final HomeController controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -78,63 +71,72 @@ class LivePriceCard extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // GOLD
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Text("Gold Rate",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(
-                              "Rs $goldPrice",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                            ),
+
+                            // ✅ Reactive with Obx
+                            Obx(() => Text(
+                                  "Rs ${controller.goldPrice.value}",
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                )),
+
                             const Text("Per Tola",
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 12)),
                             const SizedBox(height: 8),
                             Image.asset("assets/image/gold.png", height: 40),
                             const SizedBox(height: 4),
-                            Text(
-                              "▲ $goldChange",
-                              style: const TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
-                            ),
+
+                            // ✅ Reactive change
+                            Obx(() => Text(
+                                  "▲ ${controller.goldChange.value}",
+                                  style: const TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
+                                )),
                           ],
                         ),
                       ),
+
                       Container(
                           width: 1, height: 100, color: Colors.grey.shade300),
+
+                      // SILVER
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Text("Silver Rate",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(
-                              "Rs $silverPrice",
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
-                            ),
+                            Obx(() => Text(
+                                  "Rs ${controller.silverPrice.value}",
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                )),
                             const Text("Per Tola",
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 12)),
                             const SizedBox(height: 8),
                             Image.asset("assets/image/silver.png", height: 40),
                             const SizedBox(height: 4),
-                            Text(
-                              "▼ $silverChange",
-                              style: const TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            Obx(() => Text(
+                                  "▼ ${controller.silverChange.value}",
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold),
+                                )),
                           ],
                         ),
                       ),

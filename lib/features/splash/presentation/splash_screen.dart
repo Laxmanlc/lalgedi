@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/auth/presentation/signuppage.dart';
 
@@ -30,11 +31,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
+    // ✅ Use GetX navigation instead of Navigator
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const Signup()),
-      );
+      Get.off(() => const Signup());
     });
   }
 
@@ -55,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
             ScaleTransition(
               scale: _animation,
               child: Image.asset(
-                'assets/image/logo.png', // Place your image in assets folder
+                'assets/image/logo.png',
                 width: 100,
                 height: 100,
               ),

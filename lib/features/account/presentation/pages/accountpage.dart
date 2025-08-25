@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/account/presentation/widgets/settingwidget.dart';
+import 'package:lalgedi/features/auth/Getx/account_controller.dart';
 
-class AccountScreen extends StatefulWidget {
+class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
-  State<AccountScreen> createState() => _AccountScreenState();
-}
-
-class _AccountScreenState extends State<AccountScreen> {
-  @override
   Widget build(BuildContext context) {
+    final AccountController controller = Get.put(AccountController());
+
     return Scaffold(
       backgroundColor: AppColors.backgroundcolor,
       body: SingleChildScrollView(
@@ -28,7 +27,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: 220,
                   fit: BoxFit.cover,
                 ),
-
                 // Outlined Text (Ashish Jewellers)
                 Stack(
                   children: [
@@ -64,36 +62,43 @@ class _AccountScreenState extends State<AccountScreen> {
                 clipBehavior: Clip.none,
                 children: [
                   // Circular profile with border
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const CircleAvatar(
-                      radius: 80,
-                      backgroundImage:
-                          AssetImage("assets/image/profilepic.jpg"),
-                    ),
-                  ),
+                  Obx(() => Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 80,
+                          backgroundImage:
+                              AssetImage(controller.profileImage.value),
+                        ),
+                      )),
 
                   // Edit Button
                   Positioned(
                     top: 5,
                     right: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const CircleAvatar(
-                        radius: 18,
-                        backgroundColor: AppColors.primarycolor,
-                        child: Icon(
-                          Icons.mode_edit_outlined,
+                    child: GestureDetector(
+                      onTap: () {
+                        // Example: Change profile image (can use file picker)
+                        controller
+                            .updateProfileImage("assets/image/profilepic2.jpg");
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
                           color: Colors.white,
-                          size: 20,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 18,
+                          backgroundColor: AppColors.primarycolor,
+                          child: Icon(
+                            Icons.mode_edit_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -117,20 +122,20 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
 
             // Name
-            const Text(
-              "Ashish BK",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Obx(() => Text(
+                  controller.userName.value,
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
 
             const SizedBox(height: 20),
 
             // Settings Section
             Container(
-              margin: const EdgeInsets.all(5), // side spacing
-              padding: const EdgeInsets.all(10), // inner padding
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: AppColors.backgroundcolor,
                 borderRadius: BorderRadius.circular(12),
@@ -142,48 +147,49 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Setting",
                     style: TextStyle(
                         color: AppColors.primarycolor,
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SettingItem(
+                  const SizedBox(height: 10),
+                  const SettingItem(
                     icon: Icons.color_lens,
                     title: "Appearance",
                     description: "Change app theme",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  const SizedBox(height: 12),
+                  const SettingItem(
                     icon: Icons.language,
                     title: "Language",
                     description: "Change language in app",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  const SizedBox(height: 12),
+                  const SettingItem(
                     icon: Icons.scale,
                     title: "Unit system",
                     description: "Change Unit system for gold and silver",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  const SizedBox(height: 12),
+                  const SettingItem(
                     icon: Icons.calendar_today,
                     title: "Calendar",
                     description: "Change calendar system",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
-                    icon: Icons.notifications,
-                    title: "Notification",
-                    description: "Enable and disable app notification",
-                  ),
+                  const SizedBox(height: 12),
+                  Obx(() => SettingItem(
+                        icon: Icons.notifications,
+                        title: "Notification",
+                        description: controller.notificationsEnabled.value
+                            ? "Enabled"
+                            : "Disabled",
+                        onTap: controller.toggleNotifications,
+                      )),
                 ],
               ),
             ),
@@ -215,6 +221,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
+                  SizedBox(height: 10),
                   SettingItem(
                     icon: Icons.message,
                     title: "Connect To Whats-app",
@@ -247,7 +254,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
+            // Legal Section
             Container(
               margin: const EdgeInsets.all(5),
               padding: const EdgeInsets.all(10),
@@ -272,6 +282,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
+                  SizedBox(height: 12),
                   SettingItem(
                     icon: Icons.description,
                     title: "Terms and COndition",
@@ -292,7 +303,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 20),
+
+            // Profile Setting Section
             Container(
               margin: const EdgeInsets.all(5),
               padding: const EdgeInsets.all(10),
@@ -317,6 +331,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
+                  SizedBox(height: 12),
                   SettingItem(
                     icon: Icons.settings_outlined,
                     title: "Profile Setting",
@@ -325,6 +340,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

@@ -1,98 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
-import 'package:lalgedi/features/onboarding/onboarding.dart';
+import 'package:lalgedi/features/auth/Getx/otp_controller.dart';
 
-class OtpScreen extends StatefulWidget {
+class OtpScreen extends StatelessWidget {
   const OtpScreen({super.key});
 
   @override
-  State<OtpScreen> createState() => _OtpScreenState();
-}
-
-class _OtpScreenState extends State<OtpScreen> {
-  final List<TextEditingController> _controllers =
-      List.generate(4, (index) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
-
-  int secondsRemaining = 15;
-  bool enableResend = false;
-
-  @override
-  void initState() {
-    super.initState();
-    startTimer();
-  }
-
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
-    for (var node in _focusNodes) {
-      node.dispose();
-    }
-    super.dispose();
-  }
-
-  void startTimer() {
-    Future.doWhile(() async {
-      if (secondsRemaining > 0) {
-        await Future.delayed(const Duration(seconds: 1));
-        setState(() => secondsRemaining--);
-        return true;
-      } else {
-        setState(() => enableResend = true);
-        return false;
-      }
-    });
-  }
-
-  Widget otpBox(int index) {
-    return SizedBox(
-      width: 60,
-      child: TextField(
-        controller: _controllers[index],
-        focusNode: _focusNodes[index],
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        textAlign: TextAlign.center,
-        maxLength: 1,
-        style: const TextStyle(fontSize: 20),
-        decoration: InputDecoration(
-          counterText: '',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFD10707)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFD10707), width: 2),
-          ),
-        ),
-        onChanged: (value) {
-          // Handle pasting whole OTP
-          if (value.length > 1) {
-            final pasted = value.split('');
-            for (int i = 0; i < pasted.length && i < _controllers.length; i++) {
-              _controllers[i].text = pasted[i];
-            }
-            FocusScope.of(context).unfocus();
-            return;
-          }
-
-          if (value.isNotEmpty && index < _focusNodes.length - 1) {
-            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-          } else if (value.isEmpty && index > 0) {
-            FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-          }
-        },
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final OtpController controller = Get.put(OtpController());
+
+    Widget otpBox(int index) {
+      return SizedBox(
+        width: 60,
+        child: TextField(
+          controller: controller.controllers[index],
+          focusNode: controller.focusNodes[index],
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          textAlign: TextAlign.center,
+          maxLength: 1,
+          style: const TextStyle(fontSize: 20),
+          decoration: InputDecoration(
+            counterText: '',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFD10707)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFD10707), width: 2),
+            ),
+          ),
+          onChanged: (value) => controller.handleOtpInput(value, index),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundcolor,
       resizeToAvoidBottomInset: false,
@@ -113,8 +58,6 @@ class _OtpScreenState extends State<OtpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Logo Row
-
                   const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -169,14 +112,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) {
-                            return const OnboardingScreen();
-                          }),
-                        );
-                      },
+                      onPressed: controller.onContinue,
                       child: const Text(
                         "Continue",
                         style: TextStyle(
@@ -190,37 +126,33 @@ class _OtpScreenState extends State<OtpScreen> {
 
                   const SizedBox(height: 20),
 
-                  // Resend Section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Didn't get code? "),
-                      GestureDetector(
-                        onTap: enableResend
-                            ? () {
-                                setState(() {
-                                  secondsRemaining = 15;
-                                  enableResend = false;
-                                });
-                                startTimer();
-                              }
-                            : null,
-                        child: Text(
-                          "Resend",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: enableResend
-                                ? const Color(0xFFD10707)
-                                : Colors.grey,
+                  // Resend Section with GetX
+                  Obx(() => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Didn't get code? "),
+                          GestureDetector(
+                            onTap: controller.enableResend.value
+                                ? controller.onResend
+                                : null,
+                            child: Text(
+                              "Resend",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: controller.enableResend.value
+                                    ? const Color(0xFFD10707)
+                                    : Colors.grey,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Text(
-                        enableResend ? "" : " in $secondsRemaining sec",
-                        style: const TextStyle(color: Colors.grey),
-                      )
-                    ],
-                  ),
+                          Text(
+                            controller.enableResend.value
+                                ? ""
+                                : " in ${controller.secondsRemaining.value} sec",
+                            style: const TextStyle(color: Colors.grey),
+                          )
+                        ],
+                      )),
                 ],
               ),
             ),

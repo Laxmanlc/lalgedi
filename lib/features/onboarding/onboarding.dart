@@ -1,47 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/features/home/presentation/bloc/onboarding_controller.dart';
 import 'package:lalgedi/features/navigationbar/navigationscreen.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  // Store selected option per step
-  final Map<int, String> _selectedOptions = {};
-
-  void nextPage() {
-    if (_selectedOptions[_currentPage] != null && _currentPage < 3) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void prevPage() {
-    if (_currentPage > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void onOptionSelected(int stepIndex, String option) {
-    setState(() {
-      _selectedOptions[stepIndex] = option;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.put(OnboardingController());
+    final PageController pageController = PageController();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -50,38 +20,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Center(
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  const SizedBox(height: 50),
+                  // Logo
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/image/logo.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const Text(
-                        "लाल",
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primarycolor,
-                        ),
-                      ),
-                      const Text(
-                        "गेडी",
-                        style: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+                      Image.asset('assets/image/logo.png',
+                          width: 50, height: 50),
+                      const Text("लाल",
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primarycolor,
+                          )),
+                      const Text("गेडी",
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          )),
                     ],
                   ),
-                  const SizedBox(
-                    height: 80,
-                  ),
+                  const SizedBox(height: 80),
+
                   Flexible(
                     child: Container(
                       constraints: const BoxConstraints(maxWidth: 400),
@@ -100,83 +61,118 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ],
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                child: PageView(
-                                  controller: _pageController,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  onPageChanged: (index) {
-                                    setState(() => _currentPage = index);
-                                  },
+                          child: Obx(() {
+                            return Column(
+                              children: [
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.3,
+                                  child: PageView(
+                                    controller: pageController,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    onPageChanged: (index) {
+                                      controller.currentPage.value = index;
+                                    },
+                                    children: [
+                                      SelectableStepWidget(
+                                        stepIndex: 0,
+                                        stepTitle: "Choose your language",
+                                        options: const ["English", "Nepali"],
+                                        selectedOption:
+                                            controller.selectedOptions[0],
+                                        onOptionSelected: controller.setOption,
+                                      ),
+                                      SelectableStepWidget(
+                                        stepIndex: 1,
+                                        stepTitle: "Choose Units System",
+                                        options: const ["Tola", "Gram"],
+                                        selectedOption:
+                                            controller.selectedOptions[1],
+                                        onOptionSelected: controller.setOption,
+                                      ),
+                                      SelectableStepWidget(
+                                        stepIndex: 2,
+                                        stepTitle: "Select Calendar",
+                                        options: const ["BS", "AD"],
+                                        selectedOption:
+                                            controller.selectedOptions[2],
+                                        onOptionSelected: controller.setOption,
+                                      ),
+                                      LocationStepWidget(
+                                        selectedDistrict:
+                                            controller.selectedOptions[3],
+                                        onDistrictSelected: (value) =>
+                                            controller.setOption(3, value),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+
+                                // Buttons
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SelectableStepWidget(
-                                      stepIndex: 0,
-                                      stepTitle: "Choose your language",
-                                      options: const ["English", "Nepali"],
-                                      selectedOption: _selectedOptions[0],
-                                      onOptionSelected: onOptionSelected,
+                                    TextButton(
+                                      onPressed:
+                                          controller.currentPage.value == 0
+                                              ? null
+                                              : () {
+                                                  controller.prevPage();
+                                                  pageController.previousPage(
+                                                    duration: const Duration(
+                                                        milliseconds: 300),
+                                                    curve: Curves.easeInOut,
+                                                  );
+                                                },
+                                      child: Text(
+                                        "Go back",
+                                        style: TextStyle(
+                                          color:
+                                              controller.currentPage.value == 0
+                                                  ? Colors.grey.shade400
+                                                  : Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                    SelectableStepWidget(
-                                      stepIndex: 1,
-                                      stepTitle: "Choose Units System",
-                                      options: const ["Tola", "Gram"],
-                                      selectedOption: _selectedOptions[1],
-                                      onOptionSelected: onOptionSelected,
-                                    ),
-                                    SelectableStepWidget(
-                                      stepIndex: 2,
-                                      stepTitle: "Select Calendar",
-                                      options: const ["BS", "AD"],
-                                      selectedOption: _selectedOptions[2],
-                                      onOptionSelected: onOptionSelected,
-                                    ),
-                                    LocationStepWidget(
-                                      selectedDistrict: _selectedOptions[3],
-                                      onDistrictSelected: (value) =>
-                                          onOptionSelected(3, value),
+                                    TextButton(
+                                      onPressed: controller.isStepCompleted(
+                                              controller.currentPage.value)
+                                          ? () {
+                                              if (controller
+                                                      .currentPage.value ==
+                                                  3) {
+                                                Get.to(() =>
+                                                    NavigationBarScreen());
+                                              } else {
+                                                controller.nextPage();
+                                                pageController.nextPage(
+                                                  duration: const Duration(
+                                                      milliseconds: 300),
+                                                  curve: Curves.easeInOut,
+                                                );
+                                              }
+                                            }
+                                          : null,
+                                      child: Text(
+                                        controller.currentPage.value == 3
+                                            ? "Finish"
+                                            : "Next",
+                                        style: TextStyle(
+                                          color: controller.isStepCompleted(
+                                                  controller.currentPage.value)
+                                              ? AppColors.primarycolor
+                                              : Colors.red.shade200,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton(
-                                    onPressed:
-                                        _currentPage == 0 ? null : prevPage,
-                                    child: Text(
-                                      "Go back",
-                                      style: TextStyle(
-                                        color: _currentPage == 0
-                                            ? Colors.grey.shade400
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed:
-                                        _selectedOptions[_currentPage] != null
-                                            ? nextPage
-                                            : null,
-                                    child: Text(
-                                      _currentPage == 3 ? "Finish" : "Next",
-                                      style: TextStyle(
-                                        color: _selectedOptions[_currentPage] !=
-                                                null
-                                            ? AppColors.primarycolor
-                                            : Colors.red.shade200,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                              ],
+                            );
+                          }),
                         ),
                       ),
                     ),
@@ -191,6 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
+// ✅ Reuse your existing Widgets (no changes except controller binding)
 class SelectableStepWidget extends StatelessWidget {
   final int stepIndex;
   final String stepTitle;
@@ -313,34 +310,6 @@ class LocationStepWidget extends StatelessWidget {
               onDistrictSelected(value);
             }
           },
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: double.infinity,
-          height: 45,
-          child: ElevatedButton(
-            onPressed: selectedDistrict != null
-                ? () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return const NavigationBarScreen();
-                      }),
-                    );
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedDistrict != null
-                  ? AppColors.primarycolor
-                  : Colors.red.shade200,
-            ),
-            child: Text(
-              "Finish Setup",
-              style: TextStyle(
-                  color:
-                      selectedDistrict != null ? Colors.white : Colors.black),
-            ),
-          ),
         ),
       ],
     );

@@ -3,25 +3,19 @@ import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/features/data/model/homepagemodel.dart';
 import 'package:lalgedi/features/home/presentation/widgets/livebuttonontap.dart';
 
-class HomeTopRow extends StatefulWidget {
-  const HomeTopRow({
-    super.key,
-    required Animation<double> animation,
-  }) : _animation = animation;
+class HomeTopRow extends StatelessWidget {
+  final Animation<double> animation;
 
-  final Animation<double> _animation;
-  @override
-  State<HomeTopRow> createState() => _HomeTopRowState();
-}
+  const HomeTopRow({super.key, required this.animation});
 
-class _HomeTopRowState extends State<HomeTopRow> {
-  final GlobalKey _liveBtnKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
+    final GlobalKey liveBtnKey = GlobalKey();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Logo text
+        // Logo
         RichText(
           text: const TextSpan(
             style: TextStyle(
@@ -44,10 +38,9 @@ class _HomeTopRowState extends State<HomeTopRow> {
 
         Row(
           children: [
-            // LIVE badge
             GestureDetector(
-              key: _liveBtnKey,
-              onTap: () => showLivePricePopup(context, _liveBtnKey),
+              key: liveBtnKey,
+              onTap: () => showLivePricePopup(context, liveBtnKey),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -58,7 +51,7 @@ class _HomeTopRowState extends State<HomeTopRow> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     FadeTransition(
-                      opacity: widget._animation,
+                      opacity: animation,
                       child: Container(
                         width: 8,
                         height: 8,
@@ -82,7 +75,6 @@ class _HomeTopRowState extends State<HomeTopRow> {
               ),
             ),
             const SizedBox(width: 12),
-            // Bell icon
             const Icon(Icons.notifications_none, size: 28),
           ],
         ),
@@ -91,7 +83,6 @@ class _HomeTopRowState extends State<HomeTopRow> {
   }
 }
 
-// rate card widget
 class RateCard extends StatelessWidget {
   final RateItem gold;
   final RateItem silver;
@@ -114,7 +105,6 @@ class RateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // card background with shadow
     return Column(
       children: [
         Material(
@@ -128,7 +118,6 @@ class RateCard extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  // Header row (title left, location right)
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -149,31 +138,23 @@ class RateCard extends StatelessWidget {
                       )
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
                   IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Left: Gold column
                         Expanded(
                           child: _RateColumn(
                             item: gold,
                             showBadgeCallback: onTapBadge,
                           ),
                         ),
-
-                        // Divider
                         const VerticalDivider(
                           width: 16,
                           thickness: 1,
                           color: Color.fromARGB(255, 145, 144, 144),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        // Right: Silver column
+                        const SizedBox(width: 5),
                         Expanded(
                           child: _RateColumn(
                             item: silver,
@@ -189,8 +170,6 @@ class RateCard extends StatelessWidget {
             ),
           ),
         ),
-
-        // last updated text aligned to right below the card
         if (lastUpdated != null) ...[
           const SizedBox(height: 8),
           Align(
@@ -221,7 +200,6 @@ class _RateColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Text styles
     final labelStyle = TextStyle(
       color: item.labelColor ?? Colors.black87,
       fontSize: 14,
@@ -238,7 +216,6 @@ class _RateColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top row: label + optional badge
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -275,10 +252,7 @@ class _RateColumn extends StatelessWidget {
               ),
           ],
         ),
-
         const SizedBox(height: 8),
-
-        // Price row
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -293,13 +267,10 @@ class _RateColumn extends StatelessWidget {
             const SizedBox(width: 8),
           ],
         ),
-
         if (item.unit != null) ...[
           const SizedBox(height: 6),
           Text(item.unit!, style: unitStyle),
         ],
-
-        // center area: image or placeholder
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
@@ -320,8 +291,6 @@ class _RateColumn extends StatelessWidget {
             ),
           ),
         ),
-
-        // bottom row: purity left, optional share icon right
         Row(
           children: [
             Text(item.purity ?? '', style: purityStyle),
