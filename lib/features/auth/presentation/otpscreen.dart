@@ -11,9 +11,12 @@ class OtpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final OtpController controller = Get.put(OtpController());
 
+    final size = MediaQuery.of(context).size;
+    final isSmall = size.width < 360;
+
     Widget otpBox(int index) {
       return SizedBox(
-        width: 60,
+        width: size.width * 0.15, // ✅ responsive width
         child: TextField(
           controller: controller.controllers[index],
           focusNode: controller.focusNodes[index],
@@ -21,7 +24,7 @@ class OtpScreen extends StatelessWidget {
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           textAlign: TextAlign.center,
           maxLength: 1,
-          style: const TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: isSmall ? 18 : 20),
           decoration: InputDecoration(
             counterText: '',
             border: OutlineInputBorder(
@@ -54,31 +57,31 @@ class OtpScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding:
+                  EdgeInsets.all(size.width * 0.05), // ✅ responsive padding
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 50),
+                  SizedBox(height: size.height * 0.08),
+
+                  // Logo Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/image/logo.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      const Text(
+                      Image.asset('assets/image/logo.png',
+                          width: size.width * 0.12, height: size.width * 0.12),
+                      Text(
                         "लाल",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: size.width * 0.12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primarycolor,
                         ),
                       ),
-                      const Text(
+                      Text(
                         "गेंडी",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: size.width * 0.12,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -86,25 +89,29 @@ class OtpScreen extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 100),
-                  const Text(
+                  SizedBox(height: size.height * 0.12),
+
+                  Text(
                     "Please Enter OTP Sent to\nYour Email",
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: size.width * 0.05,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: size.height * 0.04),
 
                   // OTP Fields
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: List.generate(4, (index) => otpBox(index)),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: size.height * 0.04),
 
                   // Continue Button
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: size.height * 0.06,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primarycolor,
@@ -113,10 +120,10 @@ class OtpScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: controller.onContinue,
-                      child: const Text(
+                      child: Text(
                         "Continue",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: size.width * 0.05,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -124,7 +131,7 @@ class OtpScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: size.height * 0.025),
 
                   // Resend Section with GetX
                   Obx(() => Row(

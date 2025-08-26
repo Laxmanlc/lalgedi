@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // ✅ added
 
 class SettingItem extends StatelessWidget {
   final IconData icon;
@@ -20,14 +21,18 @@ class SettingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius:
+          BorderRadius.circular(context.sw(12)), // ✅ responsive radius
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+        padding: EdgeInsets.symmetric(
+          vertical: context.sh(12),
+          horizontal: context.sw(14),
+        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(context.sw(12)),
           border: Border.all(
-            color: Colors.grey.shade300, // outline color
+            color: Colors.grey.shade300,
             width: 1,
           ),
         ),
@@ -36,15 +41,15 @@ class SettingItem extends StatelessWidget {
           children: [
             // Icon
             CircleAvatar(
-              radius: 20,
+              radius: context.sw(20), // ✅ responsive
               backgroundColor: Colors.transparent,
               child: Icon(
                 icon,
                 color: iconColor,
-                size: 30,
+                size: context.sp(30), // ✅ responsive
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: context.sw(12)),
 
             // Title + Description
             Expanded(
@@ -53,16 +58,16 @@ class SettingItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: context.sp(16),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: context.sh(2)),
                   Text(
                     description,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: context.sp(13),
                       color: Colors.grey.shade600,
                     ),
                   ),

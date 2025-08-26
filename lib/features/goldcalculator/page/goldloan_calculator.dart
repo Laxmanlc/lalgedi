@@ -45,7 +45,6 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
         color: Colors.white,
         child: Column(
           children: [
-            // Done button row
             SizedBox(
               height: 40,
               child: Row(
@@ -75,8 +74,6 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                 ],
               ),
             ),
-
-            // The wheel date picker
             Expanded(
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
@@ -112,7 +109,6 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
       return;
     }
 
-    // Simple interest: P * R * (days/365)
     final r = ratePct / 100.0;
     _interest = amount * r * (_days / 365.0);
     _total = amount + _interest;
@@ -157,227 +153,241 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    const maxWidth = 380.0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isWide = constraints.maxWidth > 500;
+        final double horizontalPadding = isWide ? 32 : 16;
+        final double maxWidth = isWide ? 500 : double.infinity;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              "लाल",
-              style: TextStyle(
-                color: AppColors.primarycolor,
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "गेडी",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        // optional
-      ),
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: maxWidth),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 8),
-                  const Text(
-                    'GOLD',
-                    style: TextStyle(
-                      color: AppColors.primarycolor,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 40,
-                      letterSpacing: 2,
-                    ),
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            title: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "लाल",
+                  style: TextStyle(
+                    color: AppColors.primarycolor,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'LOAN CALCULATOR',
-                    style: TextStyle(
-                      letterSpacing: 1.1,
-                      color: AppColors.primarycolor,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                    ),
+                ),
+                Text(
+                  "गेडी",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(height: 18),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x22000000),
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: const Color(0xFFF5F5F5),
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding, vertical: 12),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxWidth),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 8),
+                      const Text(
+                        'GOLD',
+                        style: TextStyle(
+                          color: AppColors.primarycolor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 40,
+                          letterSpacing: 2,
                         ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _label('Loan amount'),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _amountCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*\.?\d{0,2}')),
-                            ],
-                            decoration: _fieldDecoration(
-                              label: '',
-                              hint: 'NPR …',
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return 'Enter loan amount';
-                              }
-                              final n = double.tryParse(v);
-                              if (n == null || n <= 0) return 'Invalid amount';
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 14),
-                          _label('Loan  date'),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _dateCtrl,
-                            readOnly: true,
-                            onTap: _pickDate,
-                            decoration: _fieldDecoration(
-                              label: '',
-                              hint: 'DD-MM-YYYY',
-                              suffix: IconButton(
-                                onPressed: _pickDate,
-                                icon: const Icon(Icons.calendar_today_outlined),
-                                tooltip: 'Pick date',
-                              ),
-                            ),
-                            validator: (_) =>
-                                _selectedDate == null ? 'Pick the date' : null,
-                          ),
-                          const SizedBox(height: 14),
-                          _label('Interest rate'),
-                          const SizedBox(height: 6),
-                          TextFormField(
-                            controller: _rateCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d*\.?\d{0,3}')),
-                            ],
-                            decoration: _fieldDecoration(
-                              label: '',
-                              hint: 'Eg 12.0',
-                              suffix: const Padding(
-                                padding: EdgeInsets.only(right: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('%',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.trim().isEmpty) {
-                                return 'Enter annual rate';
-                              }
-                              final n = double.tryParse(v);
-                              if (n == null) return 'Invalid rate';
-                              if (n < 0 || n > 100) {
-                                return 'Rate must be 0–100';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 18),
-                          SizedBox(
-                            width: double.infinity,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: AppColors.primarycolor,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0x33000000),
-                                    blurRadius: 8,
-                                    offset: Offset(0, 4),
-                                  )
-                                ],
-                              ),
-                              child: ElevatedButton(
-                                onPressed: _calculate,
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 14),
-                                ),
-                                child: const Text(
-                                  'Calculate',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          if (_showSummary) ...[
-                            _label('Loan Summary'),
-                            const SizedBox(height: 8),
-                            _summaryCard(),
-                          ],
-                        ],
                       ),
-                    ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'LOAN CALCULATOR',
+                        style: TextStyle(
+                          letterSpacing: 1.1,
+                          color: AppColors.primarycolor,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x22000000),
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 18),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _label('Loan amount'),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _amountCtrl,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d*\.?\d{0,2}')),
+                                ],
+                                decoration: _fieldDecoration(
+                                  label: '',
+                                  hint: 'NPR …',
+                                ),
+                                validator: (v) {
+                                  if (v == null || v.trim().isEmpty) {
+                                    return 'Enter loan amount';
+                                  }
+                                  final n = double.tryParse(v);
+                                  if (n == null || n <= 0) {
+                                    return 'Invalid amount';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 14),
+                              _label('Loan date'),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _dateCtrl,
+                                readOnly: true,
+                                onTap: _pickDate,
+                                decoration: _fieldDecoration(
+                                  label: '',
+                                  hint: 'DD-MM-YYYY',
+                                  suffix: IconButton(
+                                    onPressed: _pickDate,
+                                    icon: const Icon(
+                                        Icons.calendar_today_outlined),
+                                    tooltip: 'Pick date',
+                                  ),
+                                ),
+                                validator: (_) => _selectedDate == null
+                                    ? 'Pick the date'
+                                    : null,
+                              ),
+                              const SizedBox(height: 14),
+                              _label('Interest rate'),
+                              const SizedBox(height: 6),
+                              TextFormField(
+                                controller: _rateCtrl,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d*\.?\d{0,3}')),
+                                ],
+                                decoration: _fieldDecoration(
+                                  label: '',
+                                  hint: 'Eg 12.0',
+                                  suffix: const Padding(
+                                    padding: EdgeInsets.only(right: 8),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('%',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600)),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                validator: (v) {
+                                  if (v == null || v.trim().isEmpty) {
+                                    return 'Enter annual rate';
+                                  }
+                                  final n = double.tryParse(v);
+                                  if (n == null) return 'Invalid rate';
+                                  if (n < 0 || n > 100) {
+                                    return 'Rate must be 0–100';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 18),
+                              SizedBox(
+                                width: double.infinity,
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primarycolor,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x33000000),
+                                        blurRadius: 8,
+                                        offset: Offset(0, 4),
+                                      )
+                                    ],
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: _calculate,
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
+                                    ),
+                                    child: const Text(
+                                      'Calculate',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              if (_showSummary) ...[
+                                _label('Loan Summary'),
+                                const SizedBox(height: 8),
+                                _summaryCard(),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _label(String text) {
-    return Text(text,
-        style: const TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 14,
-        ));
+    return Text(
+      text,
+      style: const TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: 14,
+      ),
+    );
   }
 
   Widget _summaryCard() {

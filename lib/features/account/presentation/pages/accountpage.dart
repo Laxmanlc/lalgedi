@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // ✅ responsive utils
 import 'package:lalgedi/features/account/presentation/widgets/settingwidget.dart';
 import 'package:lalgedi/features/auth/Getx/account_controller.dart';
 
@@ -24,7 +25,7 @@ class AccountScreen extends StatelessWidget {
                 Image.asset(
                   "assets/image/cover.jpg",
                   width: double.infinity,
-                  height: 220,
+                  height: context.sh(220),
                   fit: BoxFit.cover,
                 ),
                 // Outlined Text (Ashish Jewellers)
@@ -33,18 +34,18 @@ class AccountScreen extends StatelessWidget {
                     Text(
                       "Ashish Jewellers",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: context.sp(28),
                         fontWeight: FontWeight.bold,
                         foreground: Paint()
+                          ..color = AppColors.primarycolor
                           ..style = PaintingStyle.stroke
-                          ..strokeWidth = 4
-                          ..color = AppColors.primarycolor,
+                          ..strokeWidth = context.sw(4),
                       ),
                     ),
-                    const Text(
+                    Text(
                       "Ashish Jewellers",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: context.sp(28),
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -56,20 +57,20 @@ class AccountScreen extends StatelessWidget {
 
             // Profile Picture with Edit + Verified
             Transform.translate(
-              offset: const Offset(0, -80),
+              offset: Offset(0, -context.sh(80)),
               child: Stack(
                 alignment: Alignment.center,
                 clipBehavior: Clip.none,
                 children: [
                   // Circular profile with border
                   Obx(() => Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: EdgeInsets.all(context.sw(4)),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                         child: CircleAvatar(
-                          radius: 80,
+                          radius: context.sw(80),
                           backgroundImage:
                               AssetImage(controller.profileImage.value),
                         ),
@@ -77,27 +78,26 @@ class AccountScreen extends StatelessWidget {
 
                   // Edit Button
                   Positioned(
-                    top: 5,
-                    right: 5,
+                    top: context.sh(5),
+                    right: context.sw(5),
                     child: GestureDetector(
                       onTap: () {
-                        // Example: Change profile image (can use file picker)
                         controller
                             .updateProfileImage("assets/image/profilepic2.jpg");
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(2),
+                        padding: EdgeInsets.all(context.sw(2)),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
-                        child: const CircleAvatar(
-                          radius: 18,
+                        child: CircleAvatar(
+                          radius: context.sw(18),
                           backgroundColor: AppColors.primarycolor,
                           child: Icon(
                             Icons.mode_edit_outlined,
                             color: Colors.white,
-                            size: 20,
+                            size: context.sp(20),
                           ),
                         ),
                       ),
@@ -105,15 +105,15 @@ class AccountScreen extends StatelessWidget {
                   ),
 
                   // Verified Badge
-                  const Positioned(
-                    bottom: -5,
+                  Positioned(
+                    bottom: -context.sh(5),
                     child: CircleAvatar(
-                      radius: 12,
+                      radius: context.sw(12),
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.verified,
                         color: Colors.blue,
-                        size: 20,
+                        size: context.sp(20),
                       ),
                     ),
                   ),
@@ -124,64 +124,65 @@ class AccountScreen extends StatelessWidget {
             // Name
             Obx(() => Text(
                   controller.userName.value,
-                  style: const TextStyle(
-                    fontSize: 30,
+                  style: TextStyle(
+                    fontSize: context.sp(30),
                     fontWeight: FontWeight.bold,
                   ),
                 )),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.sh(20)),
 
             // Settings Section
             Container(
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(10),
+              margin: EdgeInsets.all(context.sw(5)),
+              padding: EdgeInsets.all(context.sw(10)),
               decoration: BoxDecoration(
                 color: AppColors.backgroundcolor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.sw(12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(-5, 5),
+                    blurRadius: context.sw(6),
+                    offset: Offset(-context.sw(5), context.sh(5)),
                   ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Setting",
                     style: TextStyle(
-                        color: AppColors.primarycolor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
+                      color: AppColors.primarycolor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.sp(15),
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: context.sh(10)),
                   const SettingItem(
                     icon: Icons.color_lens,
                     title: "Appearance",
                     description: "Change app theme",
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.sh(12)),
                   const SettingItem(
                     icon: Icons.language,
                     title: "Language",
                     description: "Change language in app",
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.sh(12)),
                   const SettingItem(
                     icon: Icons.scale,
                     title: "Unit system",
                     description: "Change Unit system for gold and silver",
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.sh(12)),
                   const SettingItem(
                     icon: Icons.calendar_today,
                     title: "Calendar",
                     description: "Change calendar system",
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.sh(12)),
                   Obx(() => SettingItem(
                         icon: Icons.notifications,
                         title: "Notification",
@@ -194,59 +195,60 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.sh(20)),
 
             // Help & Support Section
             Container(
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(10),
+              margin: EdgeInsets.all(context.sw(5)),
+              padding: EdgeInsets.all(context.sw(10)),
               decoration: BoxDecoration(
                 color: AppColors.backgroundcolor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.sw(12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(-5, 5),
+                    blurRadius: context.sw(6),
+                    offset: Offset(-context.sw(5), context.sh(5)),
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Help and Support",
                     style: TextStyle(
-                        color: AppColors.primarycolor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
+                      color: AppColors.primarycolor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.sp(15),
+                    ),
                   ),
-                  SizedBox(height: 10),
-                  SettingItem(
+                  SizedBox(height: context.sh(10)),
+                  const SettingItem(
                     icon: Icons.message,
                     title: "Connect To Whats-app",
                     description: "Connect with us in whatsapp",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.facebook,
                     title: "Facebook Page",
                     description: "LalGedi facebook page",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.email,
                     title: "Email Support",
                     description: "Email us for any support",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.support_agent,
                     title: "In-App Support",
                     description: "Chat ai assistant of app",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.bug_report,
                     title: "Report Bugs",
                     description: "Report Bugs of app",
@@ -255,47 +257,48 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.sh(20)),
 
             // Legal Section
             Container(
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(10),
+              margin: EdgeInsets.all(context.sw(5)),
+              padding: EdgeInsets.all(context.sw(10)),
               decoration: BoxDecoration(
                 color: AppColors.backgroundcolor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.sw(12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(-5, 5),
+                    blurRadius: context.sw(6),
+                    offset: Offset(-context.sw(5), context.sh(5)),
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Legal",
                     style: TextStyle(
-                        color: AppColors.primarycolor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
+                      color: AppColors.primarycolor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.sp(15),
+                    ),
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.description,
-                    title: "Terms and COndition",
-                    description: "Terms and COndition of app",
+                    title: "Terms and Condition",
+                    description: "Terms and Condition of app",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.privacy_tip,
-                    title: "Privacy Poolicy ",
+                    title: "Privacy Policy",
                     description: "Our privacy policy",
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.info,
                     title: "About Us",
                     description: "About lalgedi App",
@@ -304,35 +307,36 @@ class AccountScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: context.sh(20)),
 
             // Profile Setting Section
             Container(
-              margin: const EdgeInsets.all(5),
-              padding: const EdgeInsets.all(10),
+              margin: EdgeInsets.all(context.sw(5)),
+              padding: EdgeInsets.all(context.sw(10)),
               decoration: BoxDecoration(
                 color: AppColors.backgroundcolor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.sw(12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 6,
-                    offset: const Offset(-5, 5),
+                    blurRadius: context.sw(6),
+                    offset: Offset(-context.sw(5), context.sh(5)),
                   ),
                 ],
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Profile Setting",
                     style: TextStyle(
-                        color: AppColors.primarycolor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15),
+                      color: AppColors.primarycolor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: context.sp(15),
+                    ),
                   ),
-                  SizedBox(height: 12),
-                  SettingItem(
+                  SizedBox(height: context.sh(12)),
+                  const SettingItem(
                     icon: Icons.settings_outlined,
                     title: "Profile Setting",
                     description: "Logout, change and forgot password",
@@ -340,7 +344,7 @@ class AccountScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: context.sh(20)),
           ],
         ),
       ),

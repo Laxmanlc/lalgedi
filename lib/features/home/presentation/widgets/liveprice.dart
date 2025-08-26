@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // import helper
 import 'package:lalgedi/features/home/presentation/bloc/home_controller.dart';
 
 class LivePriceCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class LivePriceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 10),
+      padding: EdgeInsets.only(left: context.sw(0), right: context.sw(10)),
       child: Material(
         color: Colors.transparent,
         child: Stack(
@@ -18,16 +19,16 @@ class LivePriceCard extends StatelessWidget {
           children: [
             // Main container
             Container(
-              constraints: const BoxConstraints(maxWidth: 350),
-              padding: const EdgeInsets.all(14),
+              constraints: BoxConstraints(maxWidth: context.sw(350)),
+              padding: context.ep(10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(context.sw(12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
+                    blurRadius: context.sw(8),
+                    offset: Offset(0, context.sh(4)),
                   ),
                 ],
               ),
@@ -37,37 +38,43 @@ class LivePriceCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         "Live Price",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: context.sp(18),
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: context.sw(5),
+                          vertical: context.sh(5),
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(context.sw(12)),
                           border: Border.all(color: Colors.red),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.newspaper, size: 16, color: Colors.red),
-                            SizedBox(width: 4),
+                            Icon(Icons.newspaper,
+                                size: context.sp(16), color: Colors.red),
+                            SizedBox(width: context.sw(4)),
                             Text(
                               "International Gold News",
-                              style: TextStyle(fontSize: 12, color: Colors.red),
+                              style: TextStyle(
+                                fontSize: context.sp(12),
+                                color: Colors.red,
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: context.sh(12)),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -76,66 +83,80 @@ class LivePriceCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text("Gold Rate",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-
-                            // ✅ Reactive with Obx
+                            Text(
+                              "Gold Rate",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: context.sp(14),
+                              ),
+                            ),
                             Obx(() => Text(
                                   "Rs ${controller.goldPrice.value}",
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: context.sp(18),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green,
                                   ),
                                 )),
-
-                            const Text("Per Tola",
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
-                            const SizedBox(height: 8),
-                            Image.asset("assets/image/gold.png", height: 40),
-                            const SizedBox(height: 4),
-
-                            // ✅ Reactive change
+                            Text(
+                              "Per Tola",
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: context.sp(12)),
+                            ),
+                            SizedBox(height: context.sh(8)),
+                            Image.asset("assets/image/gold.png",
+                                height: context.sh(40)),
+                            SizedBox(height: context.sh(4)),
                             Obx(() => Text(
                                   "▲ ${controller.goldChange.value}",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: Colors.green,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: context.sp(14)),
                                 )),
                           ],
                         ),
                       ),
 
                       Container(
-                          width: 1, height: 100, color: Colors.grey.shade300),
+                          width: context.sw(1),
+                          height: context.sh(100),
+                          color: Colors.grey.shade300),
 
                       // SILVER
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text("Silver Rate",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                              "Silver Rate",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: context.sp(14)),
+                            ),
                             Obx(() => Text(
                                   "Rs ${controller.silverPrice.value}",
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: context.sp(18),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red,
                                   ),
                                 )),
-                            const Text("Per Tola",
-                                style: TextStyle(
-                                    color: Colors.grey, fontSize: 12)),
-                            const SizedBox(height: 8),
-                            Image.asset("assets/image/silver.png", height: 40),
-                            const SizedBox(height: 4),
+                            Text(
+                              "Per Tola",
+                              style: TextStyle(
+                                  color: Colors.grey, fontSize: context.sp(12)),
+                            ),
+                            SizedBox(height: context.sh(8)),
+                            Image.asset("assets/image/silver.png",
+                                height: context.sh(40)),
+                            SizedBox(height: context.sh(4)),
                             Obx(() => Text(
                                   "▼ ${controller.silverChange.value}",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: Colors.red,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: context.sp(14)),
                                 )),
                           ],
                         ),
@@ -148,10 +169,10 @@ class LivePriceCard extends StatelessWidget {
 
             // Arrow positioned to top right of container
             Positioned(
-              top: -10,
-              right: 30,
+              top: context.sh(-10),
+              right: context.sw(40),
               child: CustomPaint(
-                size: const Size(20, 10),
+                size: Size(context.sw(20), context.sh(10)),
                 painter: _ArrowPainter(),
               ),
             ),

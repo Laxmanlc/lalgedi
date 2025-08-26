@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // import your helper
 import 'package:lalgedi/features/data/model/homepagemodel.dart';
 import 'package:lalgedi/features/home/presentation/bloc/home_controller.dart';
 import 'package:lalgedi/features/home/presentation/page/gold_calculator.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // removes default back button
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromRGBO(255, 245, 245, 1),
         elevation: 0,
         title: HomeTopRow(animation: homeController.animation),
@@ -25,7 +26,7 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: context.ep(8), // responsive padding
             child: Column(
               children: [
                 // Rate Card reactive with GetX
@@ -39,8 +40,8 @@ class HomeScreen extends StatelessWidget {
                         purity: '24k 99.99%',
                         image: Image.asset(
                           "assets/image/gold.png",
-                          height: 50,
-                          width: 50,
+                          height: context.sh(50), // responsive height
+                          width: context.sw(50), // responsive width
                         ),
                       ),
                       silver: RateItem(
@@ -51,8 +52,8 @@ class HomeScreen extends StatelessWidget {
                         purity: '99.99%',
                         image: Image.asset(
                           "assets/image/silver.png",
-                          height: 60,
-                          width: 60,
+                          height: context.sh(60),
+                          width: context.sw(60),
                         ),
                       ),
                       lastUpdated: homeController.lastUpdated.value,
@@ -60,11 +61,11 @@ class HomeScreen extends StatelessWidget {
                       onTapBadge: () {},
                     )),
 
-                const SizedBox(height: 20),
+                SizedBox(height: context.sh(20)),
 
-                // Jewelry Calculator Widget (if reactive needed, wrap with Obx)
+                // Jewelry Calculator Widget (wrap with Obx if reactive)
                 const JewelryCalculatorWidget(),
-                const SizedBox(height: 20),
+                SizedBox(height: context.sh(20)),
               ],
             ),
           ),

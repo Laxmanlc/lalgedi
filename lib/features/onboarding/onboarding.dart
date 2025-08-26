@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // import helper
 import 'package:lalgedi/features/home/presentation/bloc/onboarding_controller.dart';
 import 'package:lalgedi/features/navigationbar/navigationscreen.dart';
 
@@ -20,53 +21,60 @@ class OnboardingScreen extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 50),
+                  SizedBox(height: context.sh(50)),
                   // Logo
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/image/logo.png',
-                          width: 50, height: 50),
-                      const Text("लाल",
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primarycolor,
-                          )),
-                      const Text("गेडी",
-                          style: TextStyle(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          )),
+                      Image.asset(
+                        'assets/image/logo.png',
+                        width: context.sw(50),
+                        height: context.sh(50),
+                      ),
+                      Text(
+                        "लाल",
+                        style: TextStyle(
+                          fontSize: context.sp(50),
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primarycolor,
+                        ),
+                      ),
+                      Text(
+                        "गेडी",
+                        style: TextStyle(
+                          fontSize: context.sp(50),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 80),
+                  SizedBox(height: context.sh(80)),
 
                   Flexible(
                     child: Container(
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      constraints: BoxConstraints(maxWidth: context.sw(400)),
+                      margin: EdgeInsets.symmetric(horizontal: context.sw(20)),
                       child: SingleChildScrollView(
                         child: Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: context.ep(20),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.shade200,
-                                blurRadius: 8,
-                                spreadRadius: 2,
+                                blurRadius: context.sw(8),
+                                spreadRadius: context.sw(2),
                               )
                             ],
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(context.sw(12)),
                           ),
                           child: Obx(() {
                             return Column(
                               children: [
                                 SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.3,
+                                  height: context.sh(
+                                      0.3 * MediaQuery.of(context).size.height),
                                   child: PageView(
                                     controller: pageController,
                                     physics:
@@ -108,7 +116,7 @@ class OnboardingScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 10),
+                                SizedBox(height: context.sh(10)),
 
                                 // Buttons
                                 Row(
@@ -134,6 +142,7 @@ class OnboardingScreen extends StatelessWidget {
                                               controller.currentPage.value == 0
                                                   ? Colors.grey.shade400
                                                   : Colors.black,
+                                          fontSize: context.sp(14),
                                         ),
                                       ),
                                     ),
@@ -165,6 +174,7 @@ class OnboardingScreen extends StatelessWidget {
                                                   controller.currentPage.value)
                                               ? AppColors.primarycolor
                                               : Colors.red.shade200,
+                                          fontSize: context.sp(14),
                                         ),
                                       ),
                                     ),
@@ -187,7 +197,7 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-// ✅ Reuse your existing Widgets (no changes except controller binding)
+// ✅ Reuse your existing Widgets (only responsiveness added)
 class SelectableStepWidget extends StatelessWidget {
   final int stepIndex;
   final String stepTitle;
@@ -211,28 +221,32 @@ class SelectableStepWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
-        const Text("Finish your setup",
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        SizedBox(height: context.sh(10)),
+        Text("Finish your setup",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: context.sp(14),
+            )),
+        SizedBox(height: context.sh(8)),
         LinearProgressIndicator(
           value: progress,
           color: AppColors.primarycolor,
           backgroundColor: Colors.red.shade100,
-          minHeight: 3,
+          minHeight: context.sh(3),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: context.sh(20)),
         Text(
           stepTitle,
-          style: const TextStyle(
-            fontSize: 18,
+          style: TextStyle(
+            fontSize: context.sp(18),
             fontWeight: FontWeight.bold,
             color: AppColors.primarycolor,
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: context.sh(20)),
         Wrap(
-          spacing: 150,
+          spacing: context.sw(20),
+          runSpacing: context.sh(10),
           children: options.map((option) {
             final isSelected = option == selectedOption;
             return OutlinedButton(
@@ -242,14 +256,17 @@ class SelectableStepWidget extends StatelessWidget {
                     color: isSelected
                         ? AppColors.primarycolor
                         : Colors.grey.shade300,
-                    width: isSelected ? 2 : 1),
+                    width: isSelected ? context.sw(2) : context.sw(1)),
                 backgroundColor: isSelected ? Colors.red.shade50 : Colors.white,
                 foregroundColor:
                     isSelected ? AppColors.primarycolor : Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.sw(20), vertical: context.sh(12)),
               ),
-              child: Text(option),
+              child: Text(
+                option,
+                style: TextStyle(fontSize: context.sp(14)),
+              ),
             );
           }).toList(),
         ),
@@ -275,35 +292,42 @@ class LocationStepWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
-        const Text("Finish your setup",
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        SizedBox(height: context.sh(10)),
+        Text("Finish your setup",
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: context.sp(14),
+            )),
+        SizedBox(height: context.sh(8)),
         LinearProgressIndicator(
           value: 1.0,
           color: AppColors.primarycolor,
           backgroundColor: Colors.red.shade100,
-          minHeight: 3,
+          minHeight: context.sh(3),
         ),
-        const SizedBox(height: 20),
-        const Text(
+        SizedBox(height: context.sh(20)),
+        Text(
           "Shop Location",
           style: TextStyle(
-            fontSize: 18,
+            fontSize: context.sp(18),
             fontWeight: FontWeight.bold,
             color: AppColors.primarycolor,
           ),
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: context.sh(20)),
         DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             border: OutlineInputBorder(),
             labelText: "Select District",
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: context.sw(12), vertical: context.sh(8)),
           ),
           value: selectedDistrict,
           items: districts
-              .map((district) =>
-                  DropdownMenuItem(value: district, child: Text(district)))
+              .map((district) => DropdownMenuItem(
+                  value: district,
+                  child: Text(district,
+                      style: TextStyle(fontSize: context.sp(14)))))
               .toList(),
           onChanged: (value) {
             if (value != null) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // import helper
 import 'package:lalgedi/features/data/model/homepagemodel.dart';
 import 'package:lalgedi/features/home/presentation/widgets/livebuttonontap.dart';
 
@@ -17,13 +18,13 @@ class HomeTopRow extends StatelessWidget {
       children: [
         // Logo
         RichText(
-          text: const TextSpan(
+          text: TextSpan(
             style: TextStyle(
-              fontSize: 30,
+              fontSize: context.sp(30), // responsive font
               fontStyle: FontStyle.italic,
               fontWeight: FontWeight.bold,
             ),
-            children: [
+            children: const [
               TextSpan(
                 text: 'लाल',
                 style: TextStyle(color: AppColors.primarycolor),
@@ -42,10 +43,13 @@ class HomeTopRow extends StatelessWidget {
               key: liveBtnKey,
               onTap: () => showLivePricePopup(context, liveBtnKey),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.sw(8),
+                  vertical: context.sh(4),
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primarycolor,
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(context.sw(4)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -53,29 +57,29 @@ class HomeTopRow extends StatelessWidget {
                     FadeTransition(
                       opacity: animation,
                       child: Container(
-                        width: 8,
-                        height: 8,
+                        width: context.sw(8),
+                        height: context.sh(8),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    const Text(
+                    SizedBox(width: context.sw(4)),
+                    Text(
                       'LIVE',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: context.sp(12),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(width: 12),
-            const Icon(Icons.notifications_none, size: 28),
+            SizedBox(width: context.sw(12)),
+            Icon(Icons.notifications_none, size: context.sp(28)),
           ],
         ),
       ],
@@ -90,7 +94,7 @@ class RateCard extends StatelessWidget {
   final VoidCallback? onShare;
   final VoidCallback? onTapBadge;
   final double borderRadius;
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry? padding;
 
   const RateCard({
     super.key,
@@ -100,45 +104,51 @@ class RateCard extends StatelessWidget {
     this.onShare,
     this.onTapBadge,
     this.borderRadius = 12.0,
-    this.padding = const EdgeInsets.all(14.0),
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
+    final cardPadding = padding ?? EdgeInsets.all(context.sw(14));
+
     return Column(
       children: [
         Material(
           elevation: 4,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(context.sw(borderRadius)),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(context.sw(borderRadius)),
             child: Container(
               width: double.infinity,
-              padding: padding,
+              padding: cardPadding,
               color: Colors.white,
               child: Column(
                 children: [
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Today's  Rate",
+                        "Today's Rate",
                         style: TextStyle(
                           color: AppColors.primarycolor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: context.sp(18),
                         ),
                       ),
                       Row(
                         children: [
-                          Icon(Icons.location_on_outlined, color: Colors.green),
-                          SizedBox(width: 4),
-                          Text("Kathmandu"),
+                          Icon(Icons.location_on_outlined,
+                              color: Colors.green, size: context.sp(18)),
+                          SizedBox(width: context.sw(4)),
+                          Text(
+                            "Kathmandu",
+                            style: TextStyle(fontSize: context.sp(14)),
+                          ),
                         ],
                       )
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: context.sh(20)),
                   IntrinsicHeight(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,12 +159,12 @@ class RateCard extends StatelessWidget {
                             showBadgeCallback: onTapBadge,
                           ),
                         ),
-                        const VerticalDivider(
-                          width: 16,
-                          thickness: 1,
-                          color: Color.fromARGB(255, 145, 144, 144),
+                        VerticalDivider(
+                          width: context.sw(16),
+                          thickness: context.sw(1),
+                          color: const Color.fromARGB(255, 145, 144, 144),
                         ),
-                        const SizedBox(width: 5),
+                        SizedBox(width: context.sw(5)),
                         Expanded(
                           child: _RateColumn(
                             item: silver,
@@ -171,12 +181,12 @@ class RateCard extends StatelessWidget {
           ),
         ),
         if (lastUpdated != null) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: context.sh(8)),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
               lastUpdated!,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(fontSize: context.sp(12), color: Colors.grey),
             ),
           )
         ],
@@ -202,16 +212,18 @@ class _RateColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     final labelStyle = TextStyle(
       color: item.labelColor ?? Colors.black87,
-      fontSize: 14,
+      fontSize: context.sp(14),
       fontWeight: FontWeight.w600,
     );
-    const priceStyle = TextStyle(
-      fontSize: 22,
+    final priceStyle = TextStyle(
+      fontSize: context.sp(22),
       fontWeight: FontWeight.bold,
       color: Colors.black,
     );
-    const unitStyle = TextStyle(fontSize: 12, color: Colors.black54);
-    const purityStyle = TextStyle(fontSize: 12, color: Colors.black45);
+    final unitStyle =
+        TextStyle(fontSize: context.sp(12), color: Colors.black54);
+    final purityStyle =
+        TextStyle(fontSize: context.sp(12), color: Colors.black45);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,10 +237,12 @@ class _RateColumn extends StatelessWidget {
               GestureDetector(
                 onTap: showBadgeCallback,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.sw(8),
+                    vertical: context.sh(4),
+                  ),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(context.sw(12)),
                     border: Border.all(color: Colors.red.shade200),
                     color: Colors.red.shade50,
                   ),
@@ -237,22 +251,22 @@ class _RateColumn extends StatelessWidget {
                     children: [
                       Text(
                         item.badgeLabel!,
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: context.sp(12),
                           color: AppColors.primarycolor,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(width: 2),
-                      const Icon(Icons.arrow_drop_down,
-                          size: 16, color: AppColors.primarycolor),
+                      SizedBox(width: context.sw(2)),
+                      Icon(Icons.arrow_drop_down,
+                          size: context.sp(16), color: AppColors.primarycolor),
                     ],
                   ),
                 ),
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: context.sh(8)),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -264,29 +278,29 @@ class _RateColumn extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: context.sw(8)),
           ],
         ),
         if (item.unit != null) ...[
-          const SizedBox(height: 6),
+          SizedBox(height: context.sh(6)),
           Text(item.unit!, style: unitStyle),
         ],
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: context.sh(8)),
               child: item.image ??
                   Container(
-                    width: 80,
-                    height: 50,
+                    width: context.sw(80),
+                    height: context.sh(50),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(context.sw(6)),
                     ),
-                    child: const Center(
-                        child:
-                            Icon(Icons.image, size: 28, color: Colors.black26)),
+                    child: Center(
+                        child: Icon(Icons.image,
+                            size: context.sp(28), color: Colors.black26)),
                   ),
             ),
           ),
@@ -298,13 +312,13 @@ class _RateColumn extends StatelessWidget {
             if (showShare)
               InkWell(
                 onTap: onShare,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(context.sw(8)),
                 child: Padding(
-                  padding: const EdgeInsets.all(6.0),
+                  padding: EdgeInsets.all(context.sw(6)),
                   child: Icon(
                     Icons.share,
                     color: Colors.red.shade400,
-                    size: 20,
+                    size: context.sp(20),
                   ),
                 ),
               ),

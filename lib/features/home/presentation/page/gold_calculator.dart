@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // ✅ use responsive helpers
 
 class JewelryCalculatorWidget extends StatefulWidget {
   final String title;
@@ -34,7 +35,6 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
     final wastagePercent = double.tryParse(_wastageController.text) ?? 0;
     final makingFee = double.tryParse(_makingFeesController.text) ?? 0;
 
-    // Example calculation
     goldValue = qty * 1000; // Example: Rate per tola = 1000 NPR
     wastageValue = goldValue * (wastagePercent / 100);
     makingValue = makingFee;
@@ -56,42 +56,59 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: context.sp(14), // ✅ responsive font
+          ),
+        ),
+        SizedBox(height: context.sh(4)),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
+          style: TextStyle(fontSize: context.sp(14)), // ✅ responsive input font
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: TextStyle(fontSize: context.sp(13)),
             suffixIcon: suffix != null
                 ? Padding(
-                    padding: const EdgeInsets.only(right: 12, top: 12),
+                    padding: EdgeInsets.only(
+                      right: context.sw(12),
+                      top: context.sh(12),
+                    ),
                     child: Text(
                       suffix,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: context.sp(13),
+                      ),
                     ),
                   )
                 : null,
-            suffixIconConstraints:
-                const BoxConstraints(minWidth: 0, minHeight: 0),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            suffixIconConstraints: BoxConstraints(
+              minWidth: context.sw(0),
+              minHeight: context.sh(0),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: context.sw(12),
+              vertical: context.sh(12),
+            ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(context.sw(8)),
               borderSide: BorderSide(color: widget.themeColor),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(context.sw(8)),
               borderSide: BorderSide(color: widget.themeColor),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(context.sw(8)),
               borderSide: BorderSide(color: widget.themeColor, width: 2),
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: context.sh(12)),
       ],
     );
   }
@@ -100,25 +117,32 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(context.sw(12)), // ✅ responsive radius
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(context.sw(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Title
             Row(
               children: [
-                Icon(Icons.calculate, color: widget.themeColor),
-                const SizedBox(width: 6),
-                Text(widget.title,
-                    style: TextStyle(
-                        color: widget.themeColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                Icon(Icons.calculate,
+                    color: widget.themeColor, size: context.sp(20)),
+                SizedBox(width: context.sw(6)),
+                Text(
+                  widget.title,
+                  style: TextStyle(
+                    color: widget.themeColor,
+                    fontSize: context.sp(16), // ✅ responsive title
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: context.sh(16)),
 
             // Inputs
             _buildTextField(
@@ -142,61 +166,74 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
             // Calculate button
             SizedBox(
               width: double.infinity,
-              height: 48,
+              height: context.sh(48),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: widget.themeColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(context.sw(10)),
                   ),
                   elevation: 4,
                 ),
                 onPressed: _calculate,
-                child: const Text(
+                child: Text(
                   "Calculate",
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.backgroundcolor),
+                    fontSize: context.sp(16),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.backgroundcolor,
+                  ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 16),
+            SizedBox(height: context.sh(16)),
 
-            // Summary (only show if calculated)
+            // Summary
             if (_showSummary) ...[
-              const Text("Summary",
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
+              Text(
+                "Summary",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: context.sp(14),
+                ),
+              ),
+              SizedBox(height: context.sh(8)),
               Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.sw(12),
+                  vertical: context.sh(12),
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.backgroundcolor,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(context.sw(8)),
                   border: Border.all(color: Colors.red.shade200),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
+                      blurRadius: context.sw(5),
+                      offset: Offset(0, context.sh(2)),
                     )
                   ],
                 ),
                 child: Column(
                   children: [
                     _buildSummaryRow(
-                        "Gold Value : ${_goldQuantityController.text} tola",
-                        goldValue),
+                      "Gold Value : ${_goldQuantityController.text} tola",
+                      goldValue,
+                    ),
                     _buildSummaryRow(
-                        "Wastage value : ${_wastageController.text}%",
-                        wastageValue),
+                      "Wastage value : ${_wastageController.text}%",
+                      wastageValue,
+                    ),
                     _buildSummaryRow("Making value", makingValue),
                     const Divider(),
-                    _buildSummaryRow("Estimated cost", estimatedCost,
-                        highlight: true),
+                    _buildSummaryRow(
+                      "Estimated cost",
+                      estimatedCost,
+                      highlight: true,
+                    ),
                   ],
                 ),
               ),
@@ -210,17 +247,22 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
   Widget _buildSummaryRow(String label, double value,
       {bool highlight = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: context.sh(4)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
-                  color: highlight ? AppColors.primarycolor : Colors.black)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: context.sp(13),
+              fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
+              color: highlight ? AppColors.primarycolor : Colors.black,
+            ),
+          ),
           Text(
             "${widget.currencyLabel} ${value.toStringAsFixed(0)}",
             style: TextStyle(
+              fontSize: context.sp(13),
               fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
               color: highlight ? AppColors.primarycolor : Colors.black,
             ),

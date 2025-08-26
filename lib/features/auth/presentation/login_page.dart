@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
+import 'package:lalgedi/core/utils/responsive.dart'; // ✅ added
 import 'package:lalgedi/core/widgets/textfield.dart';
 import 'package:lalgedi/features/auth/Getx/login_controller.dart';
 import 'package:lalgedi/features/auth/presentation/signuppage.dart';
@@ -33,53 +34,60 @@ class LoginPage extends StatelessWidget {
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                left: 15,
-                right: 15,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                left: context.sw(15),
+                right: context.sw(15),
+                bottom:
+                    MediaQuery.of(context).viewInsets.bottom + context.sh(20),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  SizedBox(height: context.sh(40)),
 
                   // Logo Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/image/logo.png',
-                          width: 50, height: 50),
-                      const Text(
+                      Image.asset(
+                        'assets/image/logo.png',
+                        width: context.sw(50),
+                        height: context.sh(50),
+                      ),
+                      Text(
                         "लाल",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: context.sp(50),
                           fontWeight: FontWeight.bold,
                           color: AppColors.primarycolor,
                         ),
                       ),
-                      const Text(
+                      Text(
                         "गेडी",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: context.sp(50),
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: context.sh(50)),
 
-                  const Text(
+                  Text(
                     "Login",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: context.sp(28),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: context.sh(20)),
 
                   // Email
                   CustomTextField(
                     hintText: "email",
                     controller: controller.emailController,
                   ),
-                  const SizedBox(height: 25),
+                  SizedBox(height: context.sh(25)),
 
                   // Password
                   Obx(() => CustomTextField(
@@ -96,7 +104,7 @@ class LoginPage extends StatelessWidget {
                           onPressed: controller.togglePassword,
                         ),
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: context.sh(16)),
 
                   // Remember me
                   Obx(() => Row(
@@ -106,15 +114,19 @@ class LoginPage extends StatelessWidget {
                             value: controller.agreeToTerms.value,
                             onChanged: controller.toggleTerms,
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Text.rich(
                               TextSpan(
-                                style: TextStyle(color: Colors.black),
-                                children: [
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: context.sp(14),
+                                ),
+                                children: const [
                                   TextSpan(
                                     text: "Remember me",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -122,19 +134,20 @@ class LoginPage extends StatelessWidget {
                           ),
                         ],
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: context.sh(16)),
 
                   // Login Button
                   Obx(() => SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: context.sh(50),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: controller.agreeToTerms.value
                                 ? const Color(0xFFD10707)
                                 : Colors.grey,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius:
+                                  BorderRadius.circular(context.sw(8)),
                             ),
                           ),
                           onPressed: controller.agreeToTerms.value
@@ -142,17 +155,17 @@ class LoginPage extends StatelessWidget {
                                   Get.offAll(() => NavigationBarScreen());
                                 }
                               : null,
-                          child: const Text(
+                          child: Text(
                             "Login",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: context.sp(18),
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ),
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: context.sh(16)),
 
                   // Forgot Password
                   Row(
@@ -160,35 +173,35 @@ class LoginPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {},
-                        child: const Text(
+                        child: Text(
                           "Forgot Password ?",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 17,
+                            fontSize: context.sp(17),
                             color: Colors.black,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: context.sh(20)),
 
                   // Signup Link
                   Row(
                     children: [
-                      const Text(
+                      Text(
                         "Don't have account ? ",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: context.sp(18)),
                       ),
                       GestureDetector(
                         onTap: () {
                           Get.to(() => const Signup());
                         },
-                        child: const Text(
+                        child: Text(
                           "Signup",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 19,
+                            fontSize: context.sp(19),
                             color: Colors.black,
                           ),
                         ),

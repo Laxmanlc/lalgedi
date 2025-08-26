@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       // ✅ Changed to GetMaterialApp
       debugShowCheckedModeBanner: false,
+      useInheritedMediaQuery: true,
       title: 'Lal Gedi',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

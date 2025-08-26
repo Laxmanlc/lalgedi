@@ -12,6 +12,7 @@ class Signup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignupController());
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -33,67 +34,73 @@ class Signup extends StatelessWidget {
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(
-                left: 15,
-                right: 15,
+                left: size.width * 0.04,
+                right: size.width * 0.04,
                 bottom: MediaQuery.of(context).viewInsets.bottom + 20,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  SizedBox(height: size.height * 0.06),
 
                   // Logo
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/image/logo.png',
-                          width: 50, height: 50),
-                      const Text(
+                      Image.asset(
+                        'assets/image/logo.png',
+                        width: size.width * 0.12,
+                        height: size.width * 0.12,
+                      ),
+                      Text(
                         "लाल",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: size.width * 0.12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primarycolor,
                         ),
                       ),
-                      const Text(
+                      Text(
                         "गेडी",
                         style: TextStyle(
-                          fontSize: 50,
+                          fontSize: size.width * 0.12,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: size.height * 0.07),
 
-                  const Text(
+                  Text(
                     "SignUp",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: size.width * 0.07,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: size.height * 0.025),
 
                   // Shop Name
                   CustomTextField(
                     hintText: "Shop name",
                     controller: controller.shopNameController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
 
                   // Username
                   CustomTextField(
                     hintText: "username",
                     controller: controller.yourNameController,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
 
-                  // Email
+                  // Phone Number
                   CustomTextField(
                     hintText: "Phone number",
                     controller: controller.phonenumber,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: size.height * 0.015),
 
                   // Password
                   Obx(() => CustomTextField(
@@ -110,7 +117,7 @@ class Signup extends StatelessWidget {
                           onPressed: controller.togglePassword,
                         ),
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: size.height * 0.02),
 
                   // Terms & Conditions
                   Obx(() => Row(
@@ -137,12 +144,12 @@ class Signup extends StatelessWidget {
                           ),
                         ],
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: size.height * 0.02),
 
                   // SignUp Button
                   Obx(() => SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: size.height * 0.06,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: controller.agreeToTerms.value
@@ -157,35 +164,35 @@ class Signup extends StatelessWidget {
                                   Get.to(() => const OtpScreen());
                                 }
                               : null,
-                          child: const Text(
+                          child: Text(
                             "SignUp",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: size.width * 0.05,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ),
                       )),
-                  const SizedBox(height: 16),
+                  SizedBox(height: size.height * 0.02),
 
                   // Already have account
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "Already have account ? ",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: size.width * 0.045),
                       ),
                       GestureDetector(
                         onTap: () {
                           Get.to(() => const LoginPage());
                         },
-                        child: const Text(
+                        child: Text(
                           "Login",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 19,
+                            fontSize: size.width * 0.05,
                             color: Colors.black,
                           ),
                         ),
