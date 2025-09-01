@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/core/utils/responsive.dart'; // ✅ responsive utils
+import 'package:lalgedi/core/widgets/url_launcher.dart';
 import 'package:lalgedi/features/account/presentation/widgets/settingwidget.dart';
 import 'package:lalgedi/features/auth/Getx/account_controller.dart';
+import 'package:lalgedi/features/auth/Getx/thehe_controller.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -11,7 +13,7 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountController controller = Get.put(AccountController());
-
+    final ThemeController themeController = Get.find();
     return Scaffold(
       backgroundColor: AppColors.backgroundcolor,
       body: SingleChildScrollView(
@@ -151,7 +153,7 @@ class AccountScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Setting",
+                    "setting.title".tr,
                     style: TextStyle(
                       color: AppColors.primarycolor,
                       fontWeight: FontWeight.bold,
@@ -159,36 +161,54 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: context.sh(10)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.color_lens,
-                    title: "Appearance",
-                    description: "Change app theme",
+                    title: "setting.appearance.title".tr,
+                    description: "setting.appearance.description".tr,
+                    onTap: () {
+                      Get.defaultDialog(
+                        title: "Theme Settings".tr,
+                        content: Obx(() {
+                          return SwitchListTile(
+                            title: Text(themeController.isDarkMode.value
+                                ? "account.dark_mode".tr
+                                : "account.light_mode".tr),
+                            value: themeController.isDarkMode.value,
+                            onChanged: (value) {
+                              themeController.toggleTheme(value);
+                            },
+                          );
+                        }),
+                        textCancel: "general.close".tr,
+                      );
+                    },
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.language,
-                    title: "Language",
-                    description: "Change language in app",
+                    title: "setting.language.title".tr,
+                    description: "setting.language.description".tr,
+                    onTap: showLanguageSwitcherDialog,
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.scale,
-                    title: "Unit system",
-                    description: "Change Unit system for gold and silver",
+                    title: "setting.unit_system.title".tr,
+                    description: "setting.unit_system.description".tr,
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.calendar_today,
-                    title: "Calendar",
-                    description: "Change calendar system",
+                    title: "setting.calendar.title".tr,
+                    description: "setting.calendar.description".tr,
                   ),
                   SizedBox(height: context.sh(12)),
                   Obx(() => SettingItem(
                         icon: Icons.notifications,
-                        title: "Notification",
+                        title: "setting.notification.title".tr,
                         description: controller.notificationsEnabled.value
-                            ? "Enabled"
-                            : "Disabled",
+                            ? "setting.notification.enabled".tr
+                            : "setting.notification.disabled".tr,
                         onTap: controller.toggleNotifications,
                       )),
                 ],
@@ -216,7 +236,7 @@ class AccountScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Help and Support",
+                    "help_support.title".tr,
                     style: TextStyle(
                       color: AppColors.primarycolor,
                       fontWeight: FontWeight.bold,
@@ -224,34 +244,43 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: context.sh(10)),
-                  const SettingItem(
-                    icon: Icons.message,
-                    title: "Connect To Whats-app",
-                    description: "Connect with us in whatsapp",
-                  ),
+                  SettingItem(
+                      icon: Icons.message,
+                      title: "help_support.whatsapp.title".tr,
+                      description: "help_support.whatsapp.description".tr,
+                      onTap: () {
+                        UrlLauncherHelper.openWhatsApp("9779861355002");
+                      }),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.facebook,
-                    title: "Facebook Page",
-                    description: "LalGedi facebook page",
+                    title: "help_support.facebook.title".tr,
+                    description: "help_support.facebook.description".tr,
+                    onTap: () {
+                      UrlLauncherHelper.openFacebook(
+                          "https://www.facebook.com/ashish.bk.379621");
+                    },
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.email,
-                    title: "Email Support",
-                    description: "Email us for any support",
+                    title: "help_support.email.title".tr,
+                    description: "help_support.email.description".tr,
+                    onTap: () {
+                      UrlLauncherHelper.openMail("");
+                    },
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.support_agent,
-                    title: "In-App Support",
-                    description: "Chat ai assistant of app",
+                    title: "help_support.in_app.title".tr,
+                    description: "help_support.in_app.description".tr,
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.bug_report,
-                    title: "Report Bugs",
-                    description: "Report Bugs of app",
+                    title: "help_support.report_bugs.title".tr,
+                    description: "help_support.report_bugs.description".tr,
                   ),
                 ],
               ),
@@ -278,7 +307,7 @@ class AccountScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Legal",
+                    "legal.title".tr,
                     style: TextStyle(
                       color: AppColors.primarycolor,
                       fontWeight: FontWeight.bold,
@@ -286,22 +315,22 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.description,
-                    title: "Terms and Condition",
-                    description: "Terms and Condition of app",
+                    title: "legal.terms.title".tr,
+                    description: "legal.terms.description".tr,
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.privacy_tip,
-                    title: "Privacy Policy",
-                    description: "Our privacy policy",
+                    title: "legal.privacy.title".tr,
+                    description: "legal.privacy.description".tr,
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.info,
-                    title: "About Us",
-                    description: "About lalgedi App",
+                    title: "legal.about.title".tr,
+                    description: "legal.about.description".tr,
                   ),
                 ],
               ),
@@ -328,7 +357,7 @@ class AccountScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Profile Setting",
+                    "profile.title".tr,
                     style: TextStyle(
                       color: AppColors.primarycolor,
                       fontWeight: FontWeight.bold,
@@ -336,10 +365,10 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: context.sh(12)),
-                  const SettingItem(
+                  SettingItem(
                     icon: Icons.settings_outlined,
-                    title: "Profile Setting",
-                    description: "Logout, change and forgot password",
+                    title: "profile.setting.title".tr,
+                    description: "profile.setting.description".tr,
                   ),
                 ],
               ),

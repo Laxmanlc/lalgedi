@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
-import 'package:lalgedi/core/utils/responsive.dart'; // ✅ use responsive helpers
+import 'package:lalgedi/core/utils/responsive.dart';
 
 class JewelryCalculatorWidget extends StatefulWidget {
   final String title;
@@ -9,9 +10,9 @@ class JewelryCalculatorWidget extends StatefulWidget {
 
   const JewelryCalculatorWidget({
     super.key,
-    this.title = "Simple Jewelry Calculator",
-    this.themeColor = AppColors.primarycolor,
-    this.currencyLabel = "NPR",
+    required this.title,
+    required this.themeColor,
+    required this.currencyLabel,
   });
 
   @override
@@ -35,7 +36,7 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
     final wastagePercent = double.tryParse(_wastageController.text) ?? 0;
     final makingFee = double.tryParse(_makingFeesController.text) ?? 0;
 
-    goldValue = qty * 1000; // Example: Rate per tola = 1000 NPR
+    goldValue = qty * 1000; // Assume 1000 per tola
     wastageValue = goldValue * (wastagePercent / 100);
     makingValue = makingFee;
 
@@ -57,17 +58,17 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
+          label.tr,
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: context.sp(14), // ✅ responsive font
+            fontSize: context.sp(14),
           ),
         ),
         SizedBox(height: context.sh(4)),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
-          style: TextStyle(fontSize: context.sp(14)), // ✅ responsive input font
+          style: TextStyle(fontSize: context.sp(14)),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(fontSize: context.sp(13)),
@@ -118,52 +119,46 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius:
-            BorderRadius.circular(context.sw(12)), // ✅ responsive radius
+        borderRadius: BorderRadius.circular(context.sw(12)),
       ),
       child: Padding(
         padding: EdgeInsets.all(context.sw(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title
             Row(
               children: [
                 Icon(Icons.calculate,
                     color: widget.themeColor, size: context.sp(20)),
                 SizedBox(width: context.sw(6)),
                 Text(
-                  widget.title,
+                  widget.title.tr,
                   style: TextStyle(
                     color: widget.themeColor,
-                    fontSize: context.sp(16), // ✅ responsive title
+                    fontSize: context.sp(16),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
             SizedBox(height: context.sh(16)),
-
-            // Inputs
             _buildTextField(
-              label: "Gold Quantity",
+              label: "general.gold_qty",
               hint: "Eg: 0.000",
               suffix: "Tola",
               controller: _goldQuantityController,
             ),
             _buildTextField(
-              label: "Wastage",
+              label: "general.wastage",
               hint: "Eg: 0.0 %",
               suffix: "%",
               controller: _wastageController,
             ),
             _buildTextField(
-              label: "Making Fees",
+              label: "general.making_fee",
               hint: widget.currencyLabel,
               controller: _makingFeesController,
             ),
-
-            // Calculate button
             SizedBox(
               width: double.infinity,
               height: context.sh(48),
@@ -177,7 +172,7 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
                 ),
                 onPressed: _calculate,
                 child: Text(
-                  "Calculate",
+                  "home.calculate".tr,
                   style: TextStyle(
                     fontSize: context.sp(16),
                     fontWeight: FontWeight.bold,
@@ -186,13 +181,10 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
                 ),
               ),
             ),
-
             SizedBox(height: context.sh(16)),
-
-            // Summary
             if (_showSummary) ...[
               Text(
-                "Summary",
+                "home.summary".tr,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: context.sp(14),
@@ -220,17 +212,19 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
                 child: Column(
                   children: [
                     _buildSummaryRow(
-                      "Gold Value : ${_goldQuantityController.text} tola",
+                      "general.gold_value"
+                          .trParams({'quantity': _goldQuantityController.text}),
                       goldValue,
                     ),
                     _buildSummaryRow(
-                      "Wastage value : ${_wastageController.text}%",
+                      "general.wastage_value"
+                          .trParams({'quantity': _wastageController.text}),
                       wastageValue,
                     ),
-                    _buildSummaryRow("Making value", makingValue),
+                    _buildSummaryRow("general.making_fee".tr, makingValue),
                     const Divider(),
                     _buildSummaryRow(
-                      "Estimated cost",
+                      "general.estimated_cost".tr,
                       estimatedCost,
                       highlight: true,
                     ),
@@ -251,12 +245,14 @@ class _JewelryCalculatorWidgetState extends State<JewelryCalculatorWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: context.sp(13),
-              fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
-              color: highlight ? AppColors.primarycolor : Colors.black,
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: context.sp(13),
+                fontWeight: highlight ? FontWeight.bold : FontWeight.normal,
+                color: highlight ? AppColors.primarycolor : Colors.black,
+              ),
             ),
           ),
           Text(

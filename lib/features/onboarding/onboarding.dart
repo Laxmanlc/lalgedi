@@ -173,7 +173,7 @@ class OnboardingScreen extends StatelessWidget {
                                           color: controller.isStepCompleted(
                                                   controller.currentPage.value)
                                               ? AppColors.primarycolor
-                                              : Colors.red.shade200,
+                                              : AppColors.redBackgroundcolor,
                                           fontSize: context.sp(14),
                                         ),
                                       ),
@@ -231,7 +231,7 @@ class SelectableStepWidget extends StatelessWidget {
         LinearProgressIndicator(
           value: progress,
           color: AppColors.primarycolor,
-          backgroundColor: Colors.red.shade100,
+          backgroundColor: AppColors.redBackgroundcolor,
           minHeight: context.sh(3),
         ),
         SizedBox(height: context.sh(20)),
@@ -257,7 +257,8 @@ class SelectableStepWidget extends StatelessWidget {
                         ? AppColors.primarycolor
                         : Colors.grey.shade300,
                     width: isSelected ? context.sw(2) : context.sw(1)),
-                backgroundColor: isSelected ? Colors.red.shade50 : Colors.white,
+                backgroundColor:
+                    isSelected ? AppColors.redBackgroundcolor : Colors.white,
                 foregroundColor:
                     isSelected ? AppColors.primarycolor : Colors.black,
                 padding: EdgeInsets.symmetric(
@@ -302,7 +303,7 @@ class LocationStepWidget extends StatelessWidget {
         LinearProgressIndicator(
           value: 1.0,
           color: AppColors.primarycolor,
-          backgroundColor: Colors.red.shade100,
+          backgroundColor: AppColors.redBackgroundcolor,
           minHeight: context.sh(3),
         ),
         SizedBox(height: context.sh(20)),
@@ -317,7 +318,7 @@ class LocationStepWidget extends StatelessWidget {
         SizedBox(height: context.sh(20)),
         DropdownButtonFormField<String>(
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: "Select District",
             contentPadding: EdgeInsets.symmetric(
                 horizontal: context.sw(12), vertical: context.sh(8)),

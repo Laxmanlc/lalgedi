@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
-import 'package:lalgedi/core/utils/responsive.dart'; // ✅ added
+import 'package:lalgedi/core/utils/responsive.dart';
+import 'package:lalgedi/features/home/presentation/bloc/language_controller.dart'; // ✅ added
 
 class SettingItem extends StatelessWidget {
   final IconData icon;
@@ -79,4 +81,40 @@ class SettingItem extends StatelessWidget {
       ),
     );
   }
+}
+
+//
+void showLanguageSwitcherDialog() {
+  final LanguageController langController = Get.find();
+
+  Get.defaultDialog(
+    title: 'account.language'.tr,
+    middleText: 'Select your preferred language'.tr,
+    textCancel: 'general.close'.tr,
+    content: Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              langController.changeLanguage('en');
+              Get.back(); // close dialog
+            },
+            child: const Text('English'),
+          ),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              langController.changeLanguage('ne');
+              Get.back(); // close dialog
+            },
+            child: const Text('नेपाली'),
+          ),
+        ),
+      ],
+    ),
+  );
 }

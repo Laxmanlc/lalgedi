@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lalgedi/core/utils/colors.dart';
-import 'package:lalgedi/core/utils/responsive.dart'; // import your helper
-import 'package:lalgedi/features/data/model/homepagemodel.dart';
+import 'package:lalgedi/core/utils/responsive.dart';
 import 'package:lalgedi/features/home/presentation/bloc/home_controller.dart';
 import 'package:lalgedi/features/home/presentation/page/gold_calculator.dart';
 import 'package:lalgedi/features/home/presentation/widgets/homewidget.dart';
@@ -26,45 +25,24 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: context.ep(8), // responsive padding
+            padding: context.ep(8),
             child: Column(
               children: [
-                // Rate Card reactive with GetX
-                Obx(() => RateCard(
-                      gold: RateItem(
-                        label: 'Gold Rate',
-                        labelColor: AppColors.primarycolor,
-                        price: "Rs ${homeController.goldPrice.value}",
-                        unit: 'Per Tola',
-                        badgeLabel: '24k',
-                        purity: '24k 99.99%',
-                        image: Image.asset(
-                          "assets/image/gold.png",
-                          height: context.sh(50), // responsive height
-                          width: context.sw(50), // responsive width
-                        ),
-                      ),
-                      silver: RateItem(
-                        label: 'Silver Rate',
-                        labelColor: AppColors.silvercolor,
-                        price: "Rs ${homeController.silverPrice.value}",
-                        unit: 'Per Tola',
-                        purity: '99.99%',
-                        image: Image.asset(
-                          "assets/image/silver.png",
-                          height: context.sh(60),
-                          width: context.sw(60),
-                        ),
-                      ),
-                      lastUpdated: homeController.lastUpdated.value,
-                      onShare: () {},
-                      onTapBadge: () {},
-                    )),
+                // ✅ RateCard reads live prices internally from LivePriceController
+                RateCard(
+                  onShare: () {},
+                  onTapBadge: () {},
+                ),
 
                 SizedBox(height: context.sh(20)),
 
-                // Jewelry Calculator Widget (wrap with Obx if reactive)
-                const JewelryCalculatorWidget(),
+                // Jewelry Calculator
+                JewelryCalculatorWidget(
+                  currencyLabel: "NPR",
+                  themeColor: AppColors.primarycolor,
+                  title: "home.simple_jewelry_calculator".tr,
+                ),
+
                 SizedBox(height: context.sh(20)),
               ],
             ),

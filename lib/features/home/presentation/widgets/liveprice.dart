@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lalgedi/core/utils/responsive.dart'; // import helper
-import 'package:lalgedi/features/home/presentation/bloc/home_controller.dart';
+import 'package:lalgedi/core/utils/responsive.dart';
+import 'package:lalgedi/features/home/presentation/bloc/liveprice_controller.dart';
+import 'package:intl/intl.dart';
 
 class LivePriceCard extends StatelessWidget {
   LivePriceCard({super.key});
 
-  final HomeController controller = Get.find<HomeController>();
+  final LivePriceController controller = Get.put(LivePriceController());
+
+  // Formatters
+  final formatter = NumberFormat("#,##0.00"); // 2 decimals for Gold
+  final formatter3 = NumberFormat("#,##0.000"); // 3 decimals for Silver
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +40,12 @@ class LivePriceCard extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Title Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Live Price",
+                        "home.live_price".tr,
                         style: TextStyle(
                           fontSize: context.sp(18),
                           fontWeight: FontWeight.bold,
@@ -63,7 +69,7 @@ class LivePriceCard extends StatelessWidget {
                                 size: context.sp(16), color: Colors.red),
                             SizedBox(width: context.sw(4)),
                             Text(
-                              "International Gold News",
+                              "home.international_gold_news".tr,
                               style: TextStyle(
                                 fontSize: context.sp(12),
                                 color: Colors.red,
@@ -74,7 +80,10 @@ class LivePriceCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   SizedBox(height: context.sh(12)),
+
+                  // Gold & Silver Row
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -84,14 +93,14 @@ class LivePriceCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Gold Rate",
+                              "home.gold_rate".tr,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: context.sp(14),
                               ),
                             ),
                             Obx(() => Text(
-                                  "Rs ${controller.goldPrice.value}",
+                                  "Rs ${formatter.format(controller.goldPriceNpr.value)}",
                                   style: TextStyle(
                                     fontSize: context.sp(18),
                                     fontWeight: FontWeight.bold,
@@ -99,7 +108,7 @@ class LivePriceCard extends StatelessWidget {
                                   ),
                                 )),
                             Text(
-                              "Per Tola",
+                              "general.per_tola".tr,
                               style: TextStyle(
                                   color: Colors.grey, fontSize: context.sp(12)),
                             ),
@@ -107,17 +116,25 @@ class LivePriceCard extends StatelessWidget {
                             Image.asset("assets/image/gold.png",
                                 height: context.sh(40)),
                             SizedBox(height: context.sh(4)),
-                            Obx(() => Text(
-                                  "▲ ${controller.goldChange.value}",
-                                  style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: context.sp(14)),
-                                )),
+                            Obx(() {
+                              final change = controller.goldChange.value;
+                              final percent = controller.goldPercent.value
+                                  .toStringAsFixed(2);
+                              final isUp = change >= 0;
+                              return Text(
+                                "${isUp ? "▲" : "▼"} ${formatter.format(change)} ($percent%)",
+                                style: TextStyle(
+                                  color: isUp ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: context.sp(14),
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       ),
 
+                      // Divider
                       Container(
                           width: context.sw(1),
                           height: context.sh(100),
@@ -129,13 +146,13 @@ class LivePriceCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Silver Rate",
+                              "home.silver_rate".tr,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: context.sp(14)),
                             ),
                             Obx(() => Text(
-                                  "Rs ${controller.silverPrice.value}",
+                                  "Rs ${formatter3.format(controller.silverPriceNpr.value)}",
                                   style: TextStyle(
                                     fontSize: context.sp(18),
                                     fontWeight: FontWeight.bold,
@@ -143,7 +160,7 @@ class LivePriceCard extends StatelessWidget {
                                   ),
                                 )),
                             Text(
-                              "Per Tola",
+                              "general.per_tola".tr,
                               style: TextStyle(
                                   color: Colors.grey, fontSize: context.sp(12)),
                             ),
@@ -151,23 +168,41 @@ class LivePriceCard extends StatelessWidget {
                             Image.asset("assets/image/silver.png",
                                 height: context.sh(40)),
                             SizedBox(height: context.sh(4)),
-                            Obx(() => Text(
-                                  "▼ ${controller.silverChange.value}",
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: context.sp(14)),
-                                )),
+                            Obx(() {
+                              final change = controller.silverChange.value;
+                              final percent = controller.silverPercent.value
+                                  .toStringAsFixed(2);
+                              final isUp = change >= 0;
+                              return Text(
+                                "${isUp ? "▲" : "▼"} ${formatter3.format(change)} ($percent%)",
+                                style: TextStyle(
+                                  color: isUp ? Colors.green : Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: context.sp(14),
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       ),
                     ],
                   ),
+
+                  SizedBox(height: context.sh(10)),
+
+                  // Last Updated
+                  Obx(() => Text(
+                        "Updated: ${controller.lastUpdated.value}",
+                        style: TextStyle(
+                          fontSize: context.sp(12),
+                          color: Colors.grey,
+                        ),
+                      )),
                 ],
               ),
             ),
 
-            // Arrow positioned to top right of container
+            // Arrow
             Positioned(
               top: context.sh(-10),
               right: context.sw(40),
@@ -186,7 +221,7 @@ class LivePriceCard extends StatelessWidget {
 class _ArrowPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color.fromARGB(255, 255, 255, 255);
+    final paint = Paint()..color = Colors.white;
     final path = Path()
       ..moveTo(0, size.height)
       ..lineTo(size.width / 2, 0)

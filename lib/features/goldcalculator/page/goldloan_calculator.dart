@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 
@@ -63,9 +64,9 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                       });
                       Navigator.pop(ctx);
                     },
-                    child: const Text(
-                      "Done",
-                      style: TextStyle(
+                    child: Text(
+                      "general.done".tr,
+                      style: const TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.w600,
                       ),
@@ -98,14 +99,14 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
     final amount = double.parse(_amountCtrl.text.replaceAll(',', ''));
     final ratePct = double.parse(_rateCtrl.text);
     if (_selectedDate == null) {
-      _snack('Please pick a loan date.');
+      _snack('general.chose_loan_date'.tr);
       return;
     }
 
     final today = DateTime.now();
     _days = today.difference(_selectedDate!).inDays;
     if (_days < 0) {
-      _snack('Loan date cannot be in the future.');
+      _snack('general.loan_date_cant_be_future'.tr);
       return;
     }
 
@@ -196,9 +197,9 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(height: 8),
-                      const Text(
-                        'GOLD',
-                        style: TextStyle(
+                      Text(
+                        "home.gold".tr,
+                        style: const TextStyle(
                           color: AppColors.primarycolor,
                           fontWeight: FontWeight.w900,
                           fontSize: 40,
@@ -206,9 +207,9 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'LOAN CALCULATOR',
-                        style: TextStyle(
+                      Text(
+                        'general.loan_calculator'.tr,
+                        style: const TextStyle(
                           letterSpacing: 1.1,
                           color: AppColors.primarycolor,
                           fontSize: 25,
@@ -235,7 +236,7 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _label('Loan amount'),
+                              _label('general.loan_amount'.tr),
                               const SizedBox(height: 6),
                               TextFormField(
                                 controller: _amountCtrl,
@@ -248,21 +249,21 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                                 ],
                                 decoration: _fieldDecoration(
                                   label: '',
-                                  hint: 'NPR …',
+                                  hint: 'general.enter_loan_amount'.tr,
                                 ),
                                 validator: (v) {
                                   if (v == null || v.trim().isEmpty) {
-                                    return 'Enter loan amount';
+                                    return 'general.enter_loan_amount'.tr;
                                   }
                                   final n = double.tryParse(v);
                                   if (n == null || n <= 0) {
-                                    return 'Invalid amount';
+                                    return 'general.invalid_amount'.tr;
                                   }
                                   return null;
                                 },
                               ),
                               const SizedBox(height: 14),
-                              _label('Loan date'),
+                              _label('general.loan_date'.tr),
                               const SizedBox(height: 6),
                               TextFormField(
                                 controller: _dateCtrl,
@@ -270,20 +271,20 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                                 onTap: _pickDate,
                                 decoration: _fieldDecoration(
                                   label: '',
-                                  hint: 'DD-MM-YYYY',
+                                  hint: 'general.pick_date'.tr,
                                   suffix: IconButton(
                                     onPressed: _pickDate,
                                     icon: const Icon(
                                         Icons.calendar_today_outlined),
-                                    tooltip: 'Pick date',
+                                    tooltip: 'general.pick_date'.tr,
                                   ),
                                 ),
                                 validator: (_) => _selectedDate == null
-                                    ? 'Pick the date'
+                                    ? 'general.pick_date'.tr
                                     : null,
                               ),
                               const SizedBox(height: 14),
-                              _label('Interest rate'),
+                              _label('general.interest_rate'.tr),
                               const SizedBox(height: 6),
                               TextFormField(
                                 controller: _rateCtrl,
@@ -296,27 +297,24 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                                 ],
                                 decoration: _fieldDecoration(
                                   label: '',
-                                  hint: 'Eg 12.0',
+                                  hint: 'general.enter_annual_rate'.tr,
                                   suffix: const Padding(
                                     padding: EdgeInsets.only(right: 8),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text('%',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600)),
-                                      ],
-                                    ),
+                                    child: Text('%',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600)),
                                   ),
                                 ),
                                 validator: (v) {
                                   if (v == null || v.trim().isEmpty) {
-                                    return 'Enter annual rate';
+                                    return 'general.enter_annual_rate'.tr;
                                   }
                                   final n = double.tryParse(v);
-                                  if (n == null) return 'Invalid rate';
+                                  if (n == null) {
+                                    return 'general.invalid_rate'.tr;
+                                  }
                                   if (n < 0 || n > 100) {
-                                    return 'Rate must be 0–100';
+                                    return 'general.rate_must_be'.tr;
                                   }
                                   return null;
                                 },
@@ -348,9 +346,9 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 14),
                                     ),
-                                    child: const Text(
-                                      'Calculate',
-                                      style: TextStyle(
+                                    child: Text(
+                                      'home.calculate'.tr,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                         color: Colors.white,
@@ -361,7 +359,7 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
                               ),
                               const SizedBox(height: 16),
                               if (_showSummary) ...[
-                                _label('Loan Summary'),
+                                _label('general.loan_summary'.tr),
                                 const SizedBox(height: 8),
                                 _summaryCard(),
                               ],
@@ -401,13 +399,16 @@ class _GoldLoanCalculatorPageState extends State<GoldLoanCalculatorPage> {
       ),
       child: Column(
         children: [
-          _row('Loan amount', _currency.format(double.parse(_amountCtrl.text))),
+          _row('general.loan_amount'.tr,
+              _currency.format(double.parse(_amountCtrl.text))),
           const SizedBox(height: 8),
-          _row('Interest ($_days days)', _currency.format(_interest)),
+          _row("general.interest".trParams({'quantity': _days.toString()}),
+              _currency.format(_interest)),
           const SizedBox(height: 8),
-          _row('Interest rate', '${_rateCtrl.text}%'),
+          _row('general.interest_rate'.tr, '${_rateCtrl.text}%'),
           const Divider(height: 20, thickness: 1),
-          _row('Total Payable', _currency.format(_total), emphasize: true),
+          _row('general.total_payable'.tr, _currency.format(_total),
+              emphasize: true),
         ],
       ),
     );
