@@ -31,7 +31,6 @@ class HomeScreen extends StatelessWidget {
                 // ✅ RateCard reads live prices internally from LivePriceController
                 RateCard(
                   onShare: () {},
-                  onTapBadge: () {},
                 ),
 
                 SizedBox(height: context.sh(20)),

@@ -1,34 +1,22 @@
 import 'package:get/get.dart';
 
 class OnboardingController extends GetxController {
-  // Track current page
-  var currentPage = 0.obs;
-
-  // Store selected options
+  // Store selected options for 4 steps
   var selectedOptions = <int, String>{}.obs;
 
-  // Page count (4 steps here)
   final int totalSteps = 4;
 
-  // Methods
   void setOption(int stepIndex, String option) {
     selectedOptions[stepIndex] = option;
   }
 
   bool isStepCompleted(int stepIndex) {
-    return selectedOptions[stepIndex] != null;
+    return selectedOptions[stepIndex] != null &&
+        selectedOptions[stepIndex]!.isNotEmpty;
   }
 
-  void nextPage() {
-    if (isStepCompleted(currentPage.value) &&
-        currentPage.value < totalSteps - 1) {
-      currentPage.value++;
-    }
-  }
-
-  void prevPage() {
-    if (currentPage.value > 0) {
-      currentPage.value--;
-    }
+  bool isAllStepsCompleted() {
+    return selectedOptions.length == totalSteps &&
+        selectedOptions.values.every((value) => value.isNotEmpty);
   }
 }

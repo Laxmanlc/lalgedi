@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:lalgedi/core/utils/colors.dart';
 import 'package:lalgedi/core/utils/responsive.dart';
-import 'package:lalgedi/features/home/presentation/bloc/liveprice_controller.dart';
+import 'package:lalgedi/features/home/presentation/bloc/nepali_price_controller.dart';
 import 'package:lalgedi/features/home/presentation/widgets/livebuttonontap.dart';
 
 class HomeTopRow extends StatelessWidget {
@@ -18,7 +18,6 @@ class HomeTopRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Logo
         RichText(
           text: TextSpan(
             style: TextStyle(
@@ -109,11 +108,10 @@ class RateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use the same LivePriceController instance registered in HomeScreen.
-    final LivePriceController controller =
-        Get.isRegistered<LivePriceController>()
-            ? Get.find<LivePriceController>()
-            : Get.put(LivePriceController(), permanent: true);
+    final GoldPriceController controller =
+        Get.isRegistered<GoldPriceController>()
+            ? Get.find<GoldPriceController>()
+            : Get.put(GoldPriceController(), permanent: true);
 
     final cardPadding = padding ?? EdgeInsets.all(context.sw(14));
 
@@ -167,13 +165,11 @@ class RateCard extends StatelessWidget {
                             label: "home.gold_rate".tr,
                             unit: "general.per_tola".tr,
                             imagePath: "assets/image/gold.png",
-                            badgeLabel: "24k",
-                            purity: "24k 99.99%",
                             priceObs: controller.goldPriceNpr,
                             changeObs: controller.goldChange,
                             percentObs: controller.goldPercent,
                             numberFormat: _fmt2,
-                            showBadgeCallback: onTapBadge,
+                            isGold: true,
                           ),
                         ),
                         VerticalDivider(
@@ -189,7 +185,6 @@ class RateCard extends StatelessWidget {
                             label: "home.silver_rate".tr,
                             unit: "general.per_tola".tr,
                             imagePath: "assets/image/silver.png",
-                            purity: "99.99%",
                             priceObs: controller.silverPriceNpr,
                             changeObs: controller.silverChange,
                             percentObs: controller.silverPercent,
@@ -223,37 +218,55 @@ class RateCard extends StatelessWidget {
   }
 }
 
-class _RateColumn extends StatelessWidget {
+class _RateColumn extends StatefulWidget {
   final String label;
   final String? unit;
   final String? imagePath;
-  final String? badgeLabel;
-  final String? purity;
   final RxDouble priceObs;
   final RxDouble changeObs;
   final RxDouble percentObs;
   final bool showShare;
   final VoidCallback? onShare;
-  final VoidCallback? showBadgeCallback;
   final NumberFormat numberFormat;
+  final bool isGold;
 
   const _RateColumn({
     required this.label,
     this.unit,
     this.imagePath,
-    this.badgeLabel,
-    this.purity,
     required this.priceObs,
     required this.changeObs,
     required this.percentObs,
     this.showShare = false,
     this.onShare,
-    this.showBadgeCallback,
     required this.numberFormat,
+    this.isGold = false,
   });
 
   @override
+  State<_RateColumn> createState() => _RateColumnState();
+}
+
+class _RateColumnState extends State<_RateColumn> {
+  final Map<String, double> goldPurityMap = {
+    "24k 99.99%": 1.0,
+    "22k 91.67%": 0.9167,
+    "20k 83.33%": 0.8333,
+    "15k 62.50%": 0.625,
+  };
+
+  late String selectedPurity;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedPurity = "24k 99.99%";
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double multiplier = widget.isGold ? goldPurityMap[selectedPurity]! : 1.0;
+
     final labelStyle = TextStyle(
       fontSize: context.sp(14),
       fontWeight: FontWeight.w600,
@@ -271,54 +284,59 @@ class _RateColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header row with badge
+        // Label + Purity Dropdown
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(label, style: labelStyle),
+            Text(widget.label, style: labelStyle),
             const Spacer(),
-            if (badgeLabel != null)
-              GestureDetector(
-                onTap: showBadgeCallback,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.sw(8),
-                    vertical: context.sh(4),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(context.sw(12)),
-                    border: Border.all(color: Colors.red.shade200),
-                    color: Colors.red.shade50,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        badgeLabel!,
+            if (widget.isGold)
+              Container(
+                height: 30,
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.sw(8),
+                  vertical: context.sh(2),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(context.sw(12)),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: DropdownButton<String>(
+                  value: selectedPurity,
+                  items: goldPurityMap.keys.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value.split(" ").first,
                         style: TextStyle(
                           fontSize: context.sp(12),
+                          fontWeight: FontWeight.bold,
                           color: AppColors.primarycolor,
-                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(width: context.sw(2)),
-                      Icon(Icons.arrow_drop_down,
-                          size: context.sp(16), color: AppColors.primarycolor),
-                    ],
-                  ),
+                    );
+                  }).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      selectedPurity = val!;
+                    });
+                  },
+                  underline: Container(),
+                  icon: Icon(Icons.arrow_drop_down,
+                      size: context.sp(16), color: AppColors.primarycolor),
                 ),
               ),
           ],
         ),
         SizedBox(height: context.sh(8)),
 
-        // Price + change %
+        // Price + change
         Obx(() {
-          final priceVal = priceObs.value;
+          final priceVal = widget.priceObs.value * multiplier;
           final priceStr =
-              (priceVal > 0) ? numberFormat.format(priceVal) : '--';
-          final chg = changeObs.value;
-          final pct = percentObs.value;
+              (priceVal > 0) ? widget.numberFormat.format(priceVal) : '--';
+          final chg = widget.changeObs.value * multiplier;
+          final pct = widget.percentObs.value;
           final isUp = chg >= 0;
 
           return Column(
@@ -327,12 +345,10 @@ class _RateColumn extends StatelessWidget {
               Text(
                 "Rs $priceStr",
                 style: priceStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(height: context.sh(4)),
               Text(
-                "${isUp ? "▲" : "▼"} ${numberFormat.format(chg)} (${pct.toStringAsFixed(2)}%)",
+                "${isUp ? "▲" : "▼"} ${widget.numberFormat.format(chg)} (${pct.toStringAsFixed(2)}%)",
                 style: TextStyle(
                   color: isUp ? Colors.green : Colors.red,
                   fontWeight: FontWeight.bold,
@@ -343,45 +359,43 @@ class _RateColumn extends StatelessWidget {
           );
         }),
 
-        if (unit != null) ...[
-          SizedBox(height: context.sh(6)),
-          Text(unit!, style: unitStyle),
-        ],
-
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.only(top: context.sh(8)),
-              child: imagePath != null
-                  ? Image.asset(
-                      imagePath!,
-                      height: context.sh(50),
-                      fit: BoxFit.contain,
-                    )
-                  : Container(
-                      width: context.sw(80),
-                      height: context.sh(50),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(context.sw(6)),
-                      ),
-                      child: Center(
-                        child: Icon(Icons.image,
-                            size: context.sp(28), color: Colors.black26),
-                      ),
-                    ),
-            ),
+        if (widget.unit != null)
+          Padding(
+            padding: EdgeInsets.only(top: context.sh(4)),
+            child: Text(widget.unit!, style: unitStyle),
           ),
+
+        // Image
+        Padding(
+          padding: EdgeInsets.only(top: context.sh(8)),
+          child: widget.imagePath != null
+              ? Image.asset(
+                  widget.imagePath!,
+                  height: context.sh(50),
+                  fit: BoxFit.contain,
+                )
+              : Container(
+                  width: context.sw(80),
+                  height: context.sh(50),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(context.sw(6)),
+                  ),
+                  child: Center(
+                    child: Icon(Icons.image,
+                        size: context.sp(28), color: Colors.black26),
+                  ),
+                ),
         ),
 
+        // Purity text + Share button
         Row(
           children: [
-            Text(purity ?? '', style: purityStyle),
+            Text(widget.isGold ? selectedPurity : '', style: purityStyle),
             const Spacer(),
-            if (showShare)
+            if (widget.showShare)
               InkWell(
-                onTap: onShare,
+                onTap: widget.onShare,
                 borderRadius: BorderRadius.circular(context.sw(8)),
                 child: Padding(
                   padding: EdgeInsets.all(context.sw(6)),
